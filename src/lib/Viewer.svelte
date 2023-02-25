@@ -4,30 +4,32 @@
 
  export let geometries: THREE.Geometry[];
 
- const cameraFOV = 45;
-
  let canvas;
  let cameraZ = 3
 
+ const cameraFOV = 45;
+ const size = new THREE.Vector3();
+
  $: loadGeometries(geometries)
 
- function loadGeometries(gs: THREE.Geometry[]) {
-     console.log(canvas)
-     if (gs.length) fit(gs[0]);
- }
-
- function fit(g: THREE.BufferGeometry) {
-     g.computeBoundingBox();
+ function loadGeometries(gs: THREE.BufferGeometry[]) {
+     const boundingBox = new THREE.Box3(new THREE.Vector3(-0.1, -0.1, -0.1), new THREE.Vector3(0.1, 0.1, 0.1));
+     for (const g of gs) {
+         g.computeBoundingBox();
+         boundingBox.union(g.boundingBox);
+     }
 
      const middle = new THREE.Vector3();
-     g.boundingBox.getCenter(middle);
-     g.applyMatrix4(new THREE.Matrix4().makeTranslation(
-          -middle.x, -middle.y, -middle.z ) );
+     boundingBox.getCenter(middle);
+     for (const g of gs) {
+         g.applyMatrix4(new THREE.Matrix4().makeTranslation(-middle.x, -middle.y, -middle.z));
+     }
 
+     boundingBox.getSize(size);
+     resize();
+ }
 
-     const size = new THREE.Vector3();
-     g.boundingBox.getSize(size);
-
+ function resize() {
      // https://wejn.org/2020/12/cracking-the-threejs-object-fitting-nut/
      const aspect = canvas ? (canvas.clientWidth / canvas.clientHeight) : 1;
      const fov = cameraFOV * ( Math.PI / 180 );
@@ -36,9 +38,10 @@
      let dy = size.z / 2 + Math.abs( size.y / 2 / Math.tan( fov / 2 ) );
      cameraZ = Math.max(dx, dy) * 1.2;
  }
-
-
 </script>
+
+<svelte:window on:resize={resize} />
+
 <div class="container" bind:this={canvas}>
     <SC.Canvas antialias alpha={true}>
         {#each geometries as geometry}

@@ -1,6 +1,4 @@
 <script lang="ts">
- import svelteLogo from './assets/svelte.svg'
- import Counter from './lib/Counter.svelte'
  import Viewer from './lib/Viewer.svelte'
  import { fromCSG } from './lib/csg'
  import { exampleGeometry } from './lib/example'
@@ -72,6 +70,8 @@
             {key}
             {#if typeof manuform[section][key] === "number"}
               <input type="number" bind:value={values[key]}/>
+            {:else if typeof manuform[section][key] === "boolean"}
+              <input type="checkbox" bind:checked={values[key]}/>
             {:else}
               <input bind:value={values[key]}/>
             {/if}

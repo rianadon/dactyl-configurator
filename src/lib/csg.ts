@@ -1,3 +1,7 @@
+/**
+   Convert the solid geometries outputted by openjscad to models that threejs can load.
+*/
+
 import { BufferGeometry, BufferAttribute } from "three";
 import { entitiesFromSolids } from "@jscad/regl-renderer"
 
@@ -23,7 +27,7 @@ function toFlatUint16(array: any[]) {
 }
 
 export function fromCSG(csg: any) {
-    const entities = entitiesFromSolids({smoothNormals: false}, csg)
+    const entities = entitiesFromSolids({ smoothNormals: false }, csg)
     return entities.map((e: any) => {
         const geo = new BufferGeometry();
 
