@@ -15,21 +15,30 @@
  let state: object = JSON.parse(JSON.stringify(manuform));
  let myWorker: Worker = null;
 
+ let logs = [];
+
+ let generating = false;
+
  $: process(state);
 
  function process(settings) {
+     generating = true;
+     logs = [];
      if (myWorker) myWorker.terminate();
      myWorker = new Worker(workerUrl);
      myWorker.postMessage({ type: "scripts", data: [wasmJSUrl, wasmUrl] });
      myWorker.onmessage = (e) => {
          console.log('Message received from worker', e.data);
          if (e.data.type == 'init') {
-             myWorker.postMessage({ type: "mesh", data: state})
+             myWorker.postMessage({ type: "mesh", data: settings})
+         } else if (e.data.type == 'log') {
+             logs = [...logs, e.data.data];
          } else if (e.data.type == 'scad') {
              const blob = new Blob([e.data.data], { type: "application/openscad" })
              scadUrl = URL.createObjectURL(blob)
          } else if (e.data.type == 'stl') {
              const blob = new Blob([e.data.data], { type: "application/octed-stream" })
+             generating = false;
              stlUrl = URL.createObjectURL(blob)
          }
      }
@@ -63,7 +72,12 @@
     {/each}
   </div>
   <div class="viewer">
-    <Viewer model={stlUrl}></Viewer>
+    <div style="position: relative; flex-grow: 1; opacity: {generating ? 0.2 : 1}">
+      <Viewer model={stlUrl}></Viewer>
+    </div>
+    <pre><code>
+    {logs.join('\n')}
+    </code></pre>
   </div>
 </main>
 

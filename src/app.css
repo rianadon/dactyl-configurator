@@ -43,6 +43,16 @@ main {
     position: relative;
 }
 
+.viewer {
+    display: flex;
+    flex-direction: column;
+}
+
+pre {
+    height: 12em; overflow: auto;
+    margin: 0; font-size: 0.8em;
+}
+
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
