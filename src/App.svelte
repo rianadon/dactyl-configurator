@@ -2,15 +2,18 @@
  import svelteLogo from './assets/svelte.svg'
  import Counter from './lib/Counter.svelte'
  import Viewer from './lib/Viewer.svelte'
+ import { fromCSG } from './lib/csg'
 
  import workerUrl from '../target/dactyl_webworker.js?url'
- import wasmJSUrl from './assets/openscad.wasm.js?url'
- import wasmUrl from './assets/openscad.wasm?url'
+ import modelingUrl from '../node_modules/@jscad/modeling/dist/jscad-modeling.min.js?url'
  import manuform from './assets/manuform.json'
  import model from './assets/model.stl?url'
+ import { BoxGeometry } from 'three'
 
  let scadUrl: string;
  let stlUrl: string = model;
+
+ let geometries = [new BoxGeometry()];
 
  let state: object = JSON.parse(JSON.stringify(manuform));
  let myWorker: Worker = null;
@@ -26,13 +29,11 @@
      logs = [];
      if (myWorker) myWorker.terminate();
      myWorker = new Worker(workerUrl);
-     myWorker.postMessage({ type: "scripts", data: [wasmJSUrl, wasmUrl] });
+     myWorker.postMessage({ type: "scripts", data: modelingUrl });
      myWorker.onmessage = (e) => {
          console.log('Message received from worker', e.data);
          if (e.data.type == 'init') {
              myWorker.postMessage({ type: "mesh", data: settings})
-         } else if (e.data.type == 'log') {
-             logs = [...logs, e.data.data];
          } else if (e.data.type == 'scad') {
              const blob = new Blob([e.data.data], { type: "application/openscad" })
              scadUrl = URL.createObjectURL(blob)
@@ -40,6 +41,10 @@
              const blob = new Blob([e.data.data], { type: "application/octed-stream" })
              generating = false;
              stlUrl = URL.createObjectURL(blob)
+         } else if (e.data.type == 'csg') {
+             generating = false;
+             geometries = fromCSG(e.data.data);
+             console.log('set geo');
          }
      }
  }
@@ -73,11 +78,8 @@
   </div>
   <div class="viewer">
     <div style="position: relative; flex-grow: 1; opacity: {generating ? 0.2 : 1}">
-      <Viewer model={stlUrl}></Viewer>
+      <Viewer geometries={geometries}></Viewer>
     </div>
-    <pre><code>
-    {logs.join('\n')}
-    </code></pre>
   </div>
 </main>
 

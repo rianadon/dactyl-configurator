@@ -1634,7 +1634,8 @@
                              ())
         bot                (cut (translate [0 0 -0.1] (union (case-walls c) screw-outers)))
         inner-thing        (difference (translate [0 0 -0.1] (project (union (extrude-linear {:height 5
-                                                                                              :scale  0.1
+                                                                                              ;; TODO Figure out how to emulate this
+                                                                                              ;; :scale  0.1
                                                                                               :center true} bot)
                                                                              (cube 50 50 5))))
                                        screw-inners)]

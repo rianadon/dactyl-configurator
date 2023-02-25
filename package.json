@@ -20,6 +20,8 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
+    "@jscad/modeling": "^2.11.0",
+    "@jscad/regl-renderer": "^2.6.5",
     "svelte-cubed": "^0.2.1",
     "three": "^0.150.0"
   }

@@ -23,4 +23,4 @@
                                    :main "dactyl_node.core"
                                    :target :node
                                    :output-to "target/dactyl_node.cjs"
-                                   :optimizations :advanced}}}})
+                                   :optimizations :simple}}}})

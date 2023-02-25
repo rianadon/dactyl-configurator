@@ -1,6 +1,8 @@
 (ns dactyl-node.worker
   (:require [dactyl-generator.generator :as gen]
             [dactyl-generator.handler :as hd]
+            [dactyl-generator.manuform :as dm]
+            [scad-clj.jscadjs :as jscadjs]
             [goog.object :as g]))
 
 (enable-console-print!)
@@ -13,38 +15,24 @@
 (defn generate-lightcycle [config]
   (hd/generate-lightcycle (hd/api-generate-lightcycle (js->clj config)) true))
 
+(defn generate-manuform-js-js [config]
+  (let [ conf (hd/api-generate-manuform (js->clj config)) ]
+    (clj->js (jscadjs/write-scad (g/get js/self "jscadModeling") (dm/model-right conf)))))
+
 (defn message [type data]
   (.postMessage js/self #js { :type type :data data }))
 
-(defn render [source]
-  (let [ openscad (g/get js/self "OpenSCAD")
-         fs (g/get openscad "FS") ]
-    ((g/get fs "writeFile") "/source.scad" source)
-    ((g/get openscad "callMain") (array
-                                      "/source.scad"
-                                      "-o"
-                                      "out.stl",
-                                      ;; "--enable=fast-csg"
-                                      ;; "--enable=fast-csg-trust-corefinement"
-                                      ;; "--enable=fast-csg-remesh"
-                                      ;; "--enable=lazy-union"
-                                      ))
-    ((g/get fs "readFile") "/out.stl")))
-
 (defn load-mesh [config]
-  (let [scad (generate-manuform config)]
+  (let [
+        scad (generate-manuform config)
+        csg (generate-manuform-js-js config)
+        ]
     (message "scad" scad)
-    (message "stl" (render scad))))
+    (message "csg" csg)))
 
 (defn load-scripts [urls]
-  (g/set js/self "OpenSCAD" #js {
-                                  "noInitialRun" true
-                                  "locateFile" (fn [] (second urls))
-                                  "onRuntimeInitialized" (fn [] (message "init" nil))
-                                  "print" (fn [text] (message "log" text))
-                                  "printErr" (fn [text] (message "log" text))
-                                  })
-  (.importScripts js/self (first urls)))
+  (.importScripts js/self urls)
+  (message "init" nil))
 
 (defn on-message [msg]
   (let [ type (.. msg -data -type)
