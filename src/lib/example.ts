@@ -1,5 +1,5 @@
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
-import model from './assets/model.stl?url'
+import model from '../assets/model.stl?url'
 
 export function exampleGeometry() {
     return new Promise((resolve, reject) => {

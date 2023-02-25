@@ -3,17 +3,17 @@
  import Counter from './lib/Counter.svelte'
  import Viewer from './lib/Viewer.svelte'
  import { fromCSG } from './lib/csg'
+ import { exampleGeometry } from './lib/example'
 
  import workerUrl from '../target/dactyl_webworker.js?url'
  import modelingUrl from '../node_modules/@jscad/modeling/dist/jscad-modeling.min.js?url'
  import manuform from './assets/manuform.json'
  import model from './assets/model.stl?url'
- import { BoxGeometry } from 'three'
 
  let scadUrl: string;
  let stlUrl: string = model;
 
- let geometries = [new BoxGeometry()];
+ let geometries = [];
 
  let state: object = JSON.parse(JSON.stringify(manuform));
  let myWorker: Worker = null;
@@ -21,6 +21,10 @@
  let logs = [];
 
  let generating = false;
+
+ exampleGeometry().then(g => {
+     if (!geometries.length) geometries = [g]
+ })
 
  $: process(state);
 
@@ -32,7 +36,7 @@
      myWorker.postMessage({ type: "scripts", data: modelingUrl });
      myWorker.onmessage = (e) => {
          console.log('Message received from worker', e.data);
-         if (e.data.type == 'init') {
+         if (e.data.type == 'scriptsinit') {
              myWorker.postMessage({ type: "mesh", data: settings})
          } else if (e.data.type == 'scad') {
              const blob = new Blob([e.data.data], { type: "application/openscad" })

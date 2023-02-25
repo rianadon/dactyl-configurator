@@ -17,6 +17,7 @@
                         :main "dactyl_worker.core"
                         :target :webworker
                         :output-to "target/dactyl_webworker.js"
+                        ;; :source-map "target/dactyl_webworker.js.map"
                         :optimizations :advanced}}
              :node   {:source-paths ["src/cljs"]
                        :compiler {

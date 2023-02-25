@@ -13,7 +13,7 @@
 
  function loadGeometries(gs: THREE.Geometry[]) {
      console.log(canvas)
-     fit(gs[0]);
+     if (gs.length) fit(gs[0]);
  }
 
  function fit(g: THREE.BufferGeometry) {
