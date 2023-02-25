@@ -14,13 +14,13 @@
   :cljsbuild {
     :builds {:worker {:source-paths ["src/cljs"]
                       :compiler {
+                        :main "dactyl_worker.core"
                         :target :webworker
                         :output-to "target/dactyl_webworker.js"
-                        :optimizations :simple}}
+                        :optimizations :advanced}}
              :node   {:source-paths ["src/cljs"]
                        :compiler {
-                         :target :node
-                         :modules {
-                           :demo {:output-to "target/dactyl_node.js"
-                                  :entries #{"dactyl_node.core"}
-                                  :exports {defaultManuformState dactyl-node.core/defaultManuformState}}}}}}})
+                                   :main "dactyl_node.core"
+                                   :target :node
+                                   :output-to "target/dactyl_node.cjs"
+                                   :optimizations :advanced}}}})
