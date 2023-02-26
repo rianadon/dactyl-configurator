@@ -1,5 +1,7 @@
 (ns dactyl-generator.handler
-  (:require [dactyl-generator.generator :as g]))
+  (:require [dactyl-generator.generator :as g]
+            [dactyl-generator.manuform :as dm]
+))
 
 (def pi Math/PI)
 ;; (defn generate-manuform [req]
@@ -288,7 +290,7 @@
         stagger-middle [0 middle-y middle-z]
         stagger-ring   [0 ring-y ring-z]
         stagger-pinky  [0 pinky-y pinky-z]
-        misc           (get body :misc)
+        misc           (get body "misc")
         c              {:configuration-ncols                       (get keys "columns" 5)
                         :configuration-nrows                       (get keys "rows" 4)
                         :configuration-thumb-count                 (keyword (get keys "thumb-count" "six"))
@@ -345,12 +347,17 @@
                         :configuration-wall-thickness               (get form "wall-thickness" 3.0)
 
                         :configuration-show-caps?                  (get misc "keycaps" false)
-                        :configuration-plate-projection?           (not (get misc "case" true))}
+                        :configuration-plate-projection?           (not (get misc "case" true))
+                        :configuration-is-right?                   (get misc "right-side" true)}
         ]
     c))
 
-(defn generate-manuform [c right]
-  (g/generate-case-dm c right))
+(defn generate-manuform [c]
+  (println (get c :configuration-is-right?))
+  (if (get c :configuration-is-right?)
+    (dm/model-right c)
+    (dm/model-left c)
+  ))
 
 (defn api-generate-lightcycle [body]
   (let [keys           (get body :keys)

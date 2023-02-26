@@ -8,11 +8,11 @@
 
 (defn generate-manuform-js [config]
   (let [ conf (hd/api-generate-manuform (js->clj config)) ]
-    (jscad/write-scad (dm/model-right conf))))
+    (jscad/write-scad (hd/generate-manuform conf))))
 
 (defn generate-manuform-js-js [config modeling]
   (let [ conf (hd/api-generate-manuform (js->clj config)) ]
-    (clj->js (jscadjs/write-scad modeling (dm/model-right conf)))))
+    (clj->js (jscadjs/write-scad modeling (hd/generate-manuform conf)))))
 
 (defn generate-manuform [config]
   (hd/generate-manuform (hd/api-generate-manuform (js->clj config)) true))
