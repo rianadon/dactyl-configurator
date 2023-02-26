@@ -44,12 +44,14 @@
 
  function resize() {
      // https://wejn.org/2020/12/cracking-the-threejs-object-fitting-nut/
-     const aspect = canvas ? (canvas.clientWidth / canvas.clientHeight) : 1;
+     let aspect = canvas ? (canvas.clientWidth / canvas.clientHeight) : 1;
+     if (aspect == 0 || aspect == Infinity) aspect = 1;
      const fov = cameraFOV * ( Math.PI / 180 );
      const fovh = 2*Math.atan(Math.tan(fov/2) * aspect);
      let dx = size.z / 2 + Math.abs( size.x / 2 / Math.tan( fovh / 2 ) );
      let dy = size.z / 2 + Math.abs( size.y / 2 / Math.tan( fov / 2 ) );
      if (camera) {
+         console.log(aspect, dx, dy);
          camera.position.normalize();
          console.log(camera.position);
          camera.position.multiplyScalar(Math.max(dx, dy) * 1.2);

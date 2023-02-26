@@ -25,3 +25,33 @@
               (partition 3 1 shapes))))
 
 (def π Math/PI)
+
+
+(defn vdot [[a b c] [d e f]] (+ (* a d) (* b e) (* c f)))
+(defn vadd [& vs] (apply map + vs))
+
+;; Matrix times column vector
+(defn mmul [[r1 r2 r3] x]
+  [(vdot r1 x) (vdot r2 x) (vdot r3 x)])
+
+(defn transpose [[[a b c] [d e f] [g h i]]]
+  [[a d g] [b e h] [c f i]])
+
+;; Matrix times a matrix
+(defn mmmul [[r1 r2 r3] M]
+  (let [Mt (transpose M)]
+    [(mmul Mt r1) (mmul Mt r2) (mmul Mt r3)]))
+
+;; Scalar multiplication
+(defn smul [x M] (mmmul [[x 0 0] [0 x 0] [0 0 x]] M))
+
+;; Matrix addition
+(defn madd [& Ms] (apply map vadd Ms))
+
+;; Rotation matrix for a rotation of angle a around a vetor v
+(defn rodrigues [a v]
+  (let [[x y z] v
+        K [[0 (- z) y] [z 0 (- x)] [(- y) x 0]]]
+    (madd [[1 0 0] [0 1 0] [0 0 1]]
+          (smul (Math/sin a) K)
+          (smul (- 1 (Math/cos a)) (mmmul K K)))))

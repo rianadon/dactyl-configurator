@@ -1,7 +1,7 @@
 (ns dactyl-generator.common
   (:refer-clojure :exclude [use import])
-  (:require [clojure.core.matrix :refer [mmul]]
-            [scad-clj.model :refer [translate cube hull rotate cylinder union mirror extrude-linear polygon sphere difference color sphere-fn cylinder-fn project *fn*]]))
+  (:require [scad-clj.model :refer [translate cube hull rotate cylinder union mirror extrude-linear polygon sphere difference color sphere-fn cylinder-fn project *fn*]]
+            [dactyl-generator.util :refer [mmul]]))
 
 ; common parts between the two boards.
 

@@ -2,9 +2,9 @@
     export let logs: string[] = [];
 </script>
 
-<div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-500/80">
-	<div class="mt-24 mx-auto w-96 text-center p-5 rounded-md bg-white dark:bg-black">
-		<h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Rendering Your Model</h3>
+<div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-900/80">
+	<div class="mt-24 mx-auto w-[38rem] text-center p-8 rounded-md bg-white dark:bg-gray-800">
+		<h3 class="text-2xl font-medium text-gray-900 dark:text-white">Generating Your Model</h3>
 		<div class="mt-2 px-7 py-3">
 			<p class="text-sm text-gray-500 dark:text-gray-200">
 				<slot></slot>

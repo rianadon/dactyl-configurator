@@ -1089,7 +1089,7 @@
      (union (key-holes c)
             (connectors c)
             (thumb c)
-            (difference (union (new-case c)
+            (difference (union  (if (get c :configuration-use-case?) (new-case c))
                                (if use-screw-inserts? (screw-insert-outers screw-placement c) ())
                                (if-not use-external-holder? (cmn/usb-holder fusb-holder-position c) ()))
                         (if-not use-external-holder?

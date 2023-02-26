@@ -2,12 +2,12 @@
     "keyboard": "manuform",
     "options": {
         "keys": {
-            "columns": 6,
-            "rows": 5,
-            "thumb-count": "six",
-            "last-row": "full",
+            "columns": 5,
+            "rows": 3,
+            "thumb-count": "two",
+            "last-row": "zero",
             "switch-type": "box",
-            "inner-column": "outie",
+            "inner-column": "innie",
             "hide-last-pinky": false
         },
         "curve": {
@@ -60,7 +60,7 @@
             "thumb-top-right-tenting-z": 69.0,
             "web-thickness": 7.0,
             "wall-thickness": 3.0,
-            "wide-pinky": true,
+            "wide-pinky": false,
             "wire-post": false
         },
         "misc": {

@@ -4,8 +4,7 @@
 
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/clojurescript "1.10.773"]
-                 [org.clojure/core.match "1.0.1"]
-                 [net.mikera/core.matrix "0.63.0"]]
+                 [org.clojure/core.match "1.0.1"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]]
 

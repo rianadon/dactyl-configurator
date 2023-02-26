@@ -175,6 +175,9 @@
    (write-block depth block)
    (list "\n" (indent depth) ")")))
 
+;; (def rodrigues [a [x y z]]
+
+
 (defmethod write-expr :rotatev [depth [form [a [x y z]] & block]]
   (concat
    (match [x y z]

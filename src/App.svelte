@@ -9,11 +9,18 @@
  import scadWasmUrl from './assets/openscad.wasm?url'
 
  import manuform from './assets/manuform.json'
- import { ManuformSchema } from './schema/manuform.schema'
+ import lightcycle from './assets/lightcycle.json'
+ import { ManuformSchema, LightcycleSchema } from './lib/schema'
  import model from './assets/model.stl?url'
  import Field from './lib/Field.svelte';
  import RenderDialog from './lib/RenderDialog.svelte';
  import Footer from './lib/Footer.svelte';
+
+ import presetLight from './assets/presets/lightcycle.default.json'
+ import presetErgodox from './assets/presets/manuform.ergodox.json'
+ import presetMinidox from './assets/presets/manuform.minidox.json'
+ import presetCorne from './assets/presets/manuform.corne.json'
+ import presetSmallest from './assets/presets/manuform.smallest.json'
 
  let scadUrl: string;
  let stlUrl: string = model;
@@ -31,11 +38,20 @@
  let generatingSTL = false;
 
  exampleGeometry().then(g => {
+     // Load the example gemoetry if nothing has been rendered yet
      if (!geometries.length) geometries = [g]
  })
 
  $: process(state);
 
+ $: schema = (state.keyboard == "manuform" ? ManuformSchema : LightcycleSchema);
+ $: defaults = (state.keyboard == "manuform" ? manuform : lightcycle);
+
+ function loadPreset(preset: typeof state) {
+     state = JSON.parse(JSON.stringify(preset))
+ }
+
+ /** Downloads a blob using a given filename */
  function download(blob: Blob, filename: string) {
      const a = document.createElement('a')
      a.href = URL.createObjectURL(blob)
@@ -57,6 +73,7 @@
  }
 
  function process(settings: typeof manuform) {
+     // Reset the state
      generatingCSG = true;
      csgError = undefined;
      logs = [];
@@ -66,26 +83,33 @@
      myWorker.onmessage = (e) => {
          console.log('Message received from worker', e.data);
          if (e.data.type == 'scriptsinit') {
+             // Now that the worker has finished loading OpenJSCAD, generate the preview.
              myWorker.postMessage({ type: "csg", data: settings})
          } else if (e.data.type == 'csgerror') {
+             // There was an error generating the preview. Show it!
              console.error(e.data.data);
              csgError = e.data.data;
          } else if (e.data.type == 'wasminit') {
+             // Now that the worker has finished loading OpenSCAD, render the STL.
              myWorker.postMessage({type: "stl", data: settings });
          } else if (e.data.type == 'scad') {
+             // SCAD generation finished. Download it!
              generatingSCAD = false;
              const blob = new Blob([e.data.data], { type: "application/x-openscad" })
              download(blob, "model.scad")
          } else if (e.data.type == 'stl') {
+             // STL generation finished. Download it!
              generatingSTL = false;
              const blob = new Blob([e.data.data], { type: "application/octet-stream" })
              download(blob, "model.stl")
          } else if (e.data.type == 'csg') {
+             // Preview finished. Show it!
              generatingCSG = false;
              geometries = fromCSG(e.data.data);
          } else if (e.data.type == 'log') {
              if (e.data.data == 'Could not initialize localization.') {
-                e.data.data = 'Starting render...'
+                 // Replace the confusing localization message with something nicer.
+                 e.data.data = 'Starting render...'
              }
              logs = [...logs, e.data.data]
          }
@@ -103,22 +127,45 @@
       <button class="button" on:click={downloadSTL}>Download STL</button>
     </div>
 
-    {#each Object.keys(ManuformSchema) as section}
+    <h2 class="text-2xl text-teal-300 font-semibold mb-2">Presets</h2>
+    <div class="mb-2 flex justify-between items-baseline">
+      <div class="mr-4">Manuform</div>
+      <div>
+        <button class="preset" on:click={() => loadPreset(presetCorne)}>Corne</button>
+        <button class="preset" on:click={() => loadPreset(presetSmallest)}>Smallest</button>
+        <button class="preset" on:click={() => loadPreset(presetErgodox)}>Ergodox</button>
+        <button class="preset" on:click={() => loadPreset(presetMinidox)}>Minidox</button>
+      </div>
+    </div>
+    <div class="flex mb-2 justify-between items-baseline">
+      <div class="mr-4">Lightcycle</div>
+      <div>
+        <button class="preset" on:click={() => loadPreset(presetLight)}>Basic</button>
+      </div>
+    </div>
+
+    {#each Object.keys(schema) as section}
       <div class="mt-8">
         <h2 class="text-2xl text-teal-300 font-semibold mb-2 capitalize">{section}</h2>
-        {#each Object.keys(ManuformSchema[section]) as key}
-          <Field defl={manuform[section][key]} schema={ManuformSchema[section][key]} bind:value={state[section][key]} />
+        {#each Object.keys(schema[section]) as key}
+          <Field defl={defaults.options[section][key]} schema={schema[section][key]} bind:value={state.options[section][key]} />
         {/each}
       </div>
     {/each}
   </div>
   <div class="flex-1">
+    {#if state.keyboard == "lightcycle"}
+      <div class="border border-2 border-yellow-400 py-2 px-4 m-2 rounded dark:bg-gray-900">
+        Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
+      </div>
+    {/if}
     <div class="viewer sticky top-[68px]">
       <Viewer geometries={geometries} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
       {#if csgError}
-        <div class="absolute text-white m-4 left-0 right-0 rounded p-4 top-[30%] bg-red-700">
+        <div class="absolute text-white m-4 left-0 right-0 rounded p-4 top-[10%] bg-red-700">
           <p>There are some rough edges in this tool, and you've found one of them.</p>
           <p class="mb-2">The set of options you've chosen cannot be previewed.</p>
+          <p class="mb-2">Even though there is no preview, you can still download the STL or the OpenSCAD model.</p>
           <p class="mb-2">Here's some technical information:</p>
           <p class="text-sm"><code>{csgError}<br>{csgError.stack.split('\n').slice(0, 5).join('\n')}</code></p>
         </div>
@@ -136,7 +183,8 @@
 {/if}
 {#if generatingSTL}
   <RenderDialog logs={logs}>
-    This may take a few minutes.
+    <p>Your model is being generated with OpenSCAD renderer.</p>
+    <p>This takes a few minutes. I suggest you stop staring at this dialog box.</p>
   </RenderDialog>
 {/if}
 
@@ -148,6 +196,10 @@
  .viewer { height: calc(100vh - 136px) }
 
  .button {
-  @apply bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500;
+     @apply bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500;
+ }
+
+ .preset {
+     @apply bg-gray-900 hover:bg-teal-700 text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500
  }
 </style>

@@ -25,9 +25,9 @@ export const ManuformSchema: Schema = {
         'hide-last-pinky': {name: "Hide Bottom Pinky?", help: "See Kinesis Advantage's Layout"}
     },
     curve: {
-        alpha: {min: 4, max: 21, name: "Column's Curvative"},
-        'pinky-alpha': {min: 4, max: 21, name: "Pinky Column's Curvative"},
-        beta: {min: 18, max: 64, name: "Row's Curvative"},
+        alpha: {min: 4, max: 21, name: "Column's Curvature"},
+        'pinky-alpha': {min: 4, max: 21, name: "Pinky Column's Curvature"},
+        beta: {min: 18, max: 64, name: "Row's Curvature"},
         centercol: {name: "Center of the curvature for the column"},
         tenting: {name: "Tenting Angle"},
         'rotate-x': {name: "Rotation around row axis"}
@@ -42,6 +42,7 @@ export const ManuformSchema: Schema = {
         'height-offset': {min: 4, max: 50, name: "Height Offset"},
         hotswap: {name: "Hotswap Socket"},
         'screw-inserts': {name: "Screw Inserts"},
+        stagger: {name: "Stagger"},
         stagger: {name: "Stagger"},
         // 'stagger-index-y': 0.0,
         // 'stagger-index-z': 0.0,
@@ -79,6 +80,47 @@ export const ManuformSchema: Schema = {
     },
     misc: {
         keycaps: {name: "Show Keycaps"},
-        'right-side': {name: "Right Side"}
+        'right-side': {name: "Right Side"},
+        plate: {name: "Generate Plate Instead"},
+    }
+}
+
+export const LightcycleSchema: Schema = {
+    keys: {
+        columns: {min: 4, max: 7, name: "Number of Columns (4–7)"},
+        'num-row': {name: "Use Number Row"},
+        'last-row': {name: "Use Bottom Row"},
+        'switch-type': {options: {box: "Box and MX", mx: "MX", 'mx-snap-in': "MX snap-in (one way)", alps: "Alps", choc: "Choc (Experimental)"}, name: "Key Hole"},
+        'thumb-count': {options: {two: "2", three: "3", five: "5", six: "6", eight: "8"}, name: "Thumb Key Count"},
+        'hide-last-pinky': {name: "Hide Bottom Pinky?", help: "See Kinesis Advantage's Layout"}
+    },
+    curve: {
+        alpha: {min: 4, max: 21, name: "Column Curvature"},
+        beta: {min: 18, max: 64, name: "Row Curvature"},
+        tenting: {name: "Tenting Angle"},
+        'thumb-alpha': {name: "Thumb's Column Curvature"},
+        'thumb-beta': {name: "Thumb's Row Curvature"},
+        'thumb-tenting': {name: "Thumb Tenting Angle"},
+    },
+    connector: {
+        external: {name: "Use External Holder"},
+    },
+    form: {
+        hotswap: {name: "Hotswap Socket"},
+        'thick-wall': {name: "Thick walls"},
+        'manuform-offset': {name: "Dactyl Manuform Columnar Stager"},
+        'web-thickness': {name: "Web Thickness", help: "Top Part of Keyboard Around Keyholes"},
+        // thumb-offset-x: 52,
+        'wide-pinky': {name: "Wide Pinky"},
+        // thumb-offset-z: 27,
+        border: {name: "Border"},
+        'z-offset': {min: 10, max: 34, name: "Height Offset"},
+        // thumb-offset-y: 45
+    },
+    misc: {
+        'screw-inserts': {name: "Screw Inserts"},
+        'right-side': {name: "Right Side"},
+        'use-case': {name: "Include case"},
+        plate: {name: "Generate Plate Instead"}
     }
 }

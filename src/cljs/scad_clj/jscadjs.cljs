@@ -2,6 +2,7 @@
   (:require [clojure.string :refer [join]]
             [scad-clj.model :refer [rad->deg]]
             [clojure.core.match :refer [match]]
+            [dactyl-generator.util :refer [rodrigues]]
             [goog.object :as g]
             ))
 
@@ -36,7 +37,7 @@
 ;; 2D
 
 (defmethod write-expr :circle [modeling [form {:keys [r fa fn fs center]}]]
-  (if-not center (throw (js/Error. "Center must be true")))
+  (if-not center (throw (js/Error. "Circle's center must be true")))
   ((g/get (g/get modeling "primitives") "circle")
    (clj->js (merge
              { "radius" r }
@@ -45,7 +46,7 @@
              (when fs { "fs" fs })))))
 
 (defmethod write-expr :square [modeling [form {:keys [x y center]}]]
-  (if-not center (throw (js/Error. "Center must be true")))
+  (if-not center (throw (js/Error. "Square's must be true")))
   ((g/get (g/get modeling "primitives") "square")
    (clj->js { "size" [x y] })))
 
@@ -71,8 +72,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 3D
 
-(defmethod write-expr :sphere [modeling [form {:keys [r fa fn fs center]}]]
-  (if-not center (throw (js/Error. "Center must be true")))
+(defmethod write-expr :sphere [modeling [form {:keys [r fa fn fs]}]]
   ((g/get (g/get modeling "primitives") "sphere")
    (clj->js (merge
              { "radius" r }
@@ -81,12 +81,12 @@
              (when fs { "fs" fs })))))
 
 (defmethod write-expr :cube [modeling [form {:keys [x y z center]}]]
-  (if-not center (throw (js/Error. "Center must be true")))
+  (if-not center (throw (js/Error. "Cube's center must be true")))
   ((g/get (g/get modeling "primitives") "cuboid")
    (clj->js { "size" [x y z] })))
 
 (defmethod write-expr :cylinder [modeling [form {:keys [h r r1 r2 fa fn fs center]}]]
-  (if-not center (throw (js/Error. "Center must be true")))
+  (if-not center (throw (js/Error. "Cylinder's center must be true")))
   (let [primitives (g/get modeling "primitives")
         fargs (merge (when fa { "fa" fa })
                      (when fn { "fn" fn })
@@ -123,12 +123,14 @@
 
 (defmethod write-expr :rotatev [modeling [form [a [x y z]] & block]]
   (let [transforms (g/get modeling "transforms")
-        inside (write-block modeling block)]
+        mat4 (g/get (g/get modeling "maths") "mat4")
+        inside (write-block modeling block)
+        matrix ((g/get mat4 "fromRotation") ((g/get mat4 "create")) a [x y z])]
    (match [x y z]
      [1 0 0] ((g/get transforms "rotateX") a inside)
      [0 1 0] ((g/get transforms "rotateY") a inside)
      [0 0 1] ((g/get transforms "rotateZ") a inside)
-     :else   (throw (js/Error. "Must rotate about a standard axis")))))
+     :else   ((g/get transforms "transform") matrix inside))))
 
 (defmethod write-expr :rotatec [modeling [form [x y z] & block]]
   ((g/get (g/get modeling "transforms") "rotate")
@@ -209,7 +211,7 @@
    (clj->js { "cut" cut }) (write-block modeling block)))
 
 (defmethod write-expr :extrude-linear [modeling [form {:keys [height twist convexity center slices scale]} & block]]
-  (if-not center (throw (js/Error. "Center must be true")))
+  (if-not center (throw (js/Error. "Extrude's center must be true")))
   ;; (if convexity (throw (js/Error. "Convexity not supported")))
   (if scale (if-not (= scale 1) (throw (js/Error. "Scale not supported"))))
   ((g/get (g/get modeling "extrusions") "extrudeLinear")

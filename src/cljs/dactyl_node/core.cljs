@@ -2,27 +2,21 @@
   (:require [dactyl-generator.generator :as gen]
             [dactyl-generator.handler :as hd]
             [dactyl-generator.manuform :as dm]
+            [scad-clj.scad :as scad]
             [scad-clj.jscad :as jscad]
             [scad-clj.jscadjs :as jscadjs]
             [goog.object :as g]))
 
-(defn generate-manuform-js [config]
-  (let [ conf (hd/api-generate-manuform (js->clj config)) ]
-    (jscad/write-scad (hd/generate-manuform conf))))
+(def generate (comp hd/generate js->clj))
+(def generate-scad (comp scad/write-scad generate))
+(def generate-jscad (comp jscad/write-scad generate))
 
-(defn generate-manuform-js-js [config modeling]
-  (let [ conf (hd/api-generate-manuform (js->clj config)) ]
-    (clj->js (jscadjs/write-scad modeling (hd/generate-manuform conf)))))
+(defn generate-js [config modeling]
+  (clj->js (jscadjs/write-scad modeling (generate config))))
 
-(defn generate-manuform [config]
-  (hd/generate-manuform (hd/api-generate-manuform (js->clj config)) true))
+(g/set js/exports "generateSCAD" generate-scad)
+(g/set js/exports "generateJSCAD" generate-jscad)
+(g/set js/exports "generateJS" generate-js)
 
-(defn generate-lightcycle [config]
-  (hd/generate-lightcycle (hd/api-generate-lightcycle (js->clj config)) true))
-
-(g/set js/exports "generateManuform" generate-manuform)
-(g/set js/exports "generateManuformJS" generate-manuform-js)
-(g/set js/exports "generateManuformJSJS" generate-manuform-js-js)
-(g/set js/exports "generateLightcyle" generate-lightcycle)
 (g/set js/exports "defaultManuformState" (clj->js (gen/generate-json-dm (hd/api-generate-manuform {}) true)))
 (g/set js/exports "defaultLightcycleState" (clj->js (gen/generate-json-dl (hd/api-generate-lightcycle {}) true)))
