@@ -1,0 +1,72 @@
+syntax = "proto2";
+
+import "proto/common.proto";
+package dactyl;
+
+message Manuform {
+  message Keys {
+    optional int32 columns = 1 [(min) = 4, (max) = 7, (name) = "Number of Columns (4–7)"];
+    optional int32 rows = 2 [(min) = 3, (max) = 6, (name) = "Number of Rows (3–6)"];
+    optional string thumb_count = 3 [(name) = "Thumb Key Count",
+                                     (dropdown) = { value: "six", name: "6 (Default)" },
+                                     (dropdown) = { value: "five", name: "5 (Mini)" },
+                                     (dropdown) = { value: "four", name: "4" },
+                                     (dropdown) = { value: "three", name: "3 (1.5u)" },
+                                     (dropdown) = { value: "three-mini", name: "3 (Minidox)" },
+                                     (dropdown) = { value: "two", name: "2" }];
+    optional string last_row = 4 [(name) = "Last Row Key Count",
+                                  (dropdown) = { value: "two", name: "Two (Default Dactyl Manuform)" },
+                                  (dropdown) = { value: "zero", name: "No Last Row" },
+                                  (dropdown) = { value: "full", name: "Use All Keys" }];
+    optional string switch_type = 5 [(name) = "Key Hole",
+                                     (dropdown) = { value: "box", name: "Box and MX" },
+                                     (dropdown) = { value: "mx", name: "MX" },
+                                     (dropdown) = { value: "mx-snap-in", name: "MX snap-in (one way)" },
+                                     (dropdown) = { value: "alps", name: "Alps" },
+                                     (dropdown) = { value: "choc", name: "Choc (Experimental)" },
+                                     (dropdown) = { value: "kailh", name: "Kailh (Experimental" }];
+    optional string inner_column = 6 [(name) = "Inner Index Finger's Column",
+                                      (dropdown) = { value: "normie", name: "Normal" },
+                                      (dropdown) = { value: "outie", name: "Use inner column" },
+                                      (dropdown) = { value: "innie", name: "Without" }];
+    optional bool hide_last_pinky = 7 [(name) = "Hide Bottom Pinky?", (help) = "See Kinesis Advantage's Layout"];
+  }
+  message Curve {
+    optional int32 alpha = 1 [(min) = 4, (max) = 21, (name) = "Column's Curvature"];
+    optional int32 pinky_alpha = 2 [(min) = 4, (max) = 21, (name) = "Pinky Column's Curvature"];
+    optional int32 beta = 3 [(min) = 18, (max) = 64, (name) = "Row's Curvature"];
+    optional int32 centercol = 4 [(name) = "Center of the curvature for the column"];
+    optional int32 tenting = 5 [(name) = "Tenting Angle"];
+    optional int32 rotate_x = 6 [(name) = "Rotation around row axis"];
+  }
+  message Connector {
+    optional bool external = 1 [(name) = "Use External Holder"];
+    optional string type = 2 [(name) = "USB Hole",
+                              (dropdown) = { value: "rj9", name: "RJ9" },
+                              (dropdown) = { value: "ttrs", name: "TTRS" },
+                              (dropdown) = { value: "usb", name: "USB only" },
+                              (dropdown) = { value: "none", name: "None" }];
+    optional bool micro_usb = 3 [(name) = "Micro USB Hole"];
+  }
+  message Form {
+    optional bool custom_thumb_cluster = 1 [(name) = "Custom Thumb Cluster (Experimental)"];
+    optional int32 height_offset = 2 [(min) = 4, (max) = 50, (name) = "Height Offset"];
+    optional bool hotswap = 3 [(name) = "Hotswap Socket"];
+    optional bool screw_inserts = 4 [(name) = "Screw Inserts"];
+    optional bool stagger = 5 [(name) = "Stagger"];
+    optional int32 web_thickness = 6 [(name) = "Web Thickness", (help) = "Top Part of Keyboard Around Keyholes"];
+    optional int32 wall_thickness = 7 [(name) = "Wall Thickness", (help) = "Around the Keyboard"];
+    optional bool wide_pinky = 8 [(name) = "Wide Pinky"];
+    optional bool wire_post = 9 [(name) = "Wire Posts"];
+  }
+  message Misc {
+    optional bool keycaps = 1 [(name) = "Show Keycaps"];
+    optional bool right_side = 2 [(name) = "Right Side"];
+    optional bool plate = 3 [(name) = "Generate Plate Instead"];
+  }
+  optional Keys keys = 1 [(name) = "Keys"];
+  optional Curve curve = 2 [(name) = "Curve"];
+  optional Connector connector = 3 [(name) = "Connector"];
+  optional Form form = 4 [(name) = "Form"];
+  optional Misc misc = 5 [(name) = "Misc"];
+}

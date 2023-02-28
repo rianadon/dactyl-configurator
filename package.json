@@ -10,10 +10,12 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
+    "@protobuf-ts/plugin": "^2.8.2",
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "@tsconfig/svelte": "^3.0.0",
     "@types/three": "^0.149.0",
     "autoprefixer": "^10.4.13",
+    "google-protobuf": "^3.21.2",
     "postcss": "^8.4.21",
     "svelte": "^3.55.1",
     "svelte-check": "^2.10.3",

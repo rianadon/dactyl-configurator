@@ -10,11 +10,13 @@
 
  import manuform from './assets/manuform.json'
  import lightcycle from './assets/lightcycle.json'
+ import type { Schema } from './lib/schema'
  import { ManuformSchema, LightcycleSchema } from './lib/schema'
  import model from './assets/model.stl?url'
  import Field from './lib/Field.svelte';
  import RenderDialog from './lib/RenderDialog.svelte';
  import Footer from './lib/Footer.svelte';
+ import { serialize, deserialize } from './lib/serialize';
 
  import presetLight from './assets/presets/lightcycle.default.json'
  import presetErgodox from './assets/presets/manuform.ergodox.json'
@@ -27,7 +29,7 @@
 
  let geometries = [];
 
- let state: typeof manuform = JSON.parse(JSON.stringify(manuform));
+ let state: typeof manuform = JSON.parse(JSON.stringify(deserialize(location.hash.substring(1), manuform)));
  let myWorker: Worker = null;
 
  let logs = [];
@@ -42,12 +44,14 @@
      if (!geometries.length) geometries = [g]
  })
 
+ $: window.location.hash = serialize(state);
  $: process(state);
 
+ let schema: Schema
  $: schema = (state.keyboard == "manuform" ? ManuformSchema : LightcycleSchema);
  $: defaults = (state.keyboard == "manuform" ? manuform : lightcycle);
 
- function loadPreset(preset: typeof state) {
+ function loadPreset(preset: object) {
      state = JSON.parse(JSON.stringify(preset))
  }
 
@@ -127,7 +131,7 @@
       <button class="button" on:click={downloadSTL}>Download STL</button>
     </div>
 
-    <h2 class="text-2xl text-teal-300 font-semibold mb-2">Presets</h2>
+    <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2">Presets</h2>
     <div class="mb-2 flex justify-between items-baseline">
       <div class="mr-4">Manuform</div>
       <div>
@@ -144,19 +148,19 @@
       </div>
     </div>
 
-    {#each Object.keys(schema) as section}
+    {#each schema as section}
       <div class="mt-8">
-        <h2 class="text-2xl text-teal-300 font-semibold mb-2 capitalize">{section}</h2>
-        {#each Object.keys(schema[section]) as key}
-          <Field defl={defaults.options[section][key]} schema={schema[section][key]} bind:value={state.options[section][key]} />
+        <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2 capitalize">{section.name}</h2>
+        {#each section.fields as key}
+          <Field defl={defaults.options[section.var][key.var]} schema={key} bind:value={state.options[section.var][key.var]} />
         {/each}
       </div>
     {/each}
   </div>
   <div class="flex-1">
     {#if state.keyboard == "lightcycle"}
-      <div class="border border-2 border-yellow-400 py-2 px-4 m-2 rounded dark:bg-gray-900">
-        Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
+      <div class="border border-2 border-yellow-400 py-2 px-4 m-2 rounded bg-white dark:bg-gray-900">
+        Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
       </div>
     {/if}
     <div class="viewer sticky top-[68px]">
@@ -196,10 +200,10 @@
  .viewer { height: calc(100vh - 136px) }
 
  .button {
-     @apply bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500;
+     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500;
  }
 
  .preset {
-     @apply bg-gray-900 hover:bg-teal-700 text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500
+     @apply bg-[#99F0DC] dark:bg-gray-900 hover:bg-teal-500 dark:hover:bg-teal-700 dark:text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500
  }
 </style>

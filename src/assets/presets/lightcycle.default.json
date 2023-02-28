@@ -3,41 +3,41 @@
     "options": {
         "keys": {
             "columns": 6,
-            "num-row": true,
-            "last-row": true,
-            "switch-type": "box",
-            "thumb-count": "five",
-            "hide-last-pinky": false
+            "numRow": true,
+            "lastRow": true,
+            "switchType": "box",
+            "thumbCount": "five",
+            "hideLastPinky": false
         },
         "curve": {
             "alpha": 12,
             "beta": 36,
             "tenting": 12,
-            "thumb-alpha": 36,
-            "thumb-beta": 36,
-            "thumb-tenting": 24
+            "thumbAlpha": 36,
+            "thumbBeta": 36,
+            "thumbTenting": 24
         },
         "connector": {
             "external": false
         },
         "form": {
             "hotswap": false,
-            "thick-wall": false,
-            "manuform-offset": false,
-            "wall-thickness": null,
-            "web-thickness": 7.0,
-            "thumb-offset-x": 52,
-            "wide-pinky": false,
-            "thumb-offset-z": 27,
+            "thickWall": false,
+            "manuformOffset": false,
+            "wallThickness": null,
+            "webThickness": 7.0,
+            "thumbOffsetX": 52,
+            "widePinky": false,
+            "thumbOffsetZ": 27,
             "border": true,
-            "z-offset": 18,
-            "thumb-offset-y": 45
+            "zOffset": 18,
+            "thumbOffsetY": 45
         },
         "misc": {
-            "right-side": true,
+            "rightSide": true,
             "plate": false,
-            "screw-inserts": false,
-            "use-case": false
+            "screwInserts": false,
+            "useCase": false
         }
     }
 }
