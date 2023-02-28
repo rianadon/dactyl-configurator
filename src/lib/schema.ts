@@ -27,6 +27,7 @@ function fieldToSchema(ns: string, field: FieldInfo) {
     const schema: FieldSchema = {
         var: field.jsonName,
         name: field.options[ns + ".name"],
+        help: field.options[ns + ".help"],
         min: field.options[ns + ".min"],
         max: field.options[ns + ".max"],
         options: field.options[ns + ".dropdown"],

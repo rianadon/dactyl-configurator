@@ -15,13 +15,13 @@
 </script>
 
 <label class="block mb-2">
-    <span class="inline-block w-80">{schema.name}
+    <span class="block mb-2 lg:mb-0 lg:inline-block w-80">{schema.name}
         {#if schema.help}
-            <div class="align-[-18%] inline-block" bind:this={referenceElement}>
+            <div class="align-[-18%] inline-block text-gray-600 dark:text-gray-100" bind:this={referenceElement}>
                 <Help size="20px" />
             </div>
             <Popover triggerEvents={["hover", "focus"]} {referenceElement} placement="top" spaceAway={4}>
-                <div class="rounded bg-slate-200 dark:bg-gray-700 border border-slate-300 dark:border-gray-600 px-2 py-1">
+                <div class="rounded bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 mx-2">
                     {schema.help}
                 </div>
             </Popover>

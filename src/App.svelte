@@ -1,5 +1,7 @@
 <script lang="ts">
  import Viewer from './lib/Viewer.svelte'
+ import Github from 'svelte-material-icons/Github.svelte'
+ import Book from 'svelte-material-icons/BookOpenVariant.svelte'
  import { fromCSG } from './lib/csg'
  import { exampleGeometry } from './lib/example'
 
@@ -121,19 +123,25 @@
  }
 </script>
 
-<header class="px-8 pb-8 pt-12">
-  <h1 class="dark:text-slate-100 text-4xl font-semibold mb-4">Dactyl Configurator</h1>
+<header class="px-8 pb-8 pt-12 flex items-center mb-4">
+  <h1 class="dark:text-slate-100 text-4xl font-semibold flex-1">Dactyl Keyboard Configurator</h1>
+  <!--<a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/docs">
+    <Book size="2em" />
+  </a>
+  <a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/">
+    <Github size="2em" />
+  </a>-->
 </header>
 <main class="px-8 dark:text-slate-100 flex">
-  <div>
+  <div class="w-80 md:w-auto">
     <div class="mb-8">
       <button class="button" on:click={downloadSCAD}>Download OpenSCAD</button>
       <button class="button" on:click={downloadSTL}>Download STL</button>
     </div>
 
     <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2">Presets</h2>
-    <div class="mb-2 flex justify-between items-baseline">
-      <div class="mr-4">Manuform</div>
+    <div class="mb-2 lg:flex justify-between items-baseline w-64 md:w-auto">
+      <div class="mb-2 mr-4">Manuform</div>
       <div>
         <button class="preset" on:click={() => loadPreset(presetCorne)}>Corne</button>
         <button class="preset" on:click={() => loadPreset(presetSmallest)}>Smallest</button>
@@ -141,8 +149,8 @@
         <button class="preset" on:click={() => loadPreset(presetMinidox)}>Minidox</button>
       </div>
     </div>
-    <div class="flex mb-2 justify-between items-baseline">
-      <div class="mr-4">Lightcycle</div>
+    <div class="lg:flex mb-2 justify-between items-baseline">
+      <div class="mb-2 mr-4">Lightcycle</div>
       <div>
         <button class="preset" on:click={() => loadPreset(presetLight)}>Basic</button>
       </div>
@@ -163,7 +171,7 @@
         Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
       </div>
     {/if}
-    <div class="viewer sticky top-[68px]">
+    <div class="viewer sticky h-[100vh] top-0">
       <Viewer geometries={geometries} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
       {#if csgError}
         <div class="absolute text-white m-4 left-0 right-0 rounded p-4 top-[10%] bg-red-700">
@@ -197,13 +205,15 @@
      @apply dark:bg-gray-800 dark:text-white;
  }
 
- .viewer { height: calc(100vh - 136px) }
+ @media (min-height: 480px) {
+     .viewer { height: calc(100vh - 136px); top: 68px }
+ }
 
  .button {
-     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500;
+     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
  }
 
  .preset {
-     @apply bg-[#99F0DC] dark:bg-gray-900 hover:bg-teal-500 dark:hover:bg-teal-700 dark:text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500
+     @apply bg-[#99F0DC] dark:bg-gray-900 hover:bg-teal-500 dark:hover:bg-teal-700 dark:text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
  }
 </style>

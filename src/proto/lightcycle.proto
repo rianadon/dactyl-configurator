@@ -34,7 +34,7 @@ message Lightcycle {
     optional bool external = 1 [(name) = "Use External Holder"];
   }
   message Form {
-    optional bool hotswap = 1 [(name) = "Hotswap Socket"];
+    optional bool hotswap = 1 [(name) = "Hotswap Socket", (help) = "Use the Kailh (Dongguan Kaihua) Hot Swap Sockets"];
     optional bool thick_wall = 2 [(name) = "Thick walls"];
     optional bool manuform_offset = 3 [(name) = "Dactyl Manuform Columnar Stager"];
     optional int32 web_thickness = 4 [(name) = "Web Thickness", (help) = "Top Part of Keyboard Around Keyholes"];
