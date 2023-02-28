@@ -50,7 +50,13 @@
   ((g/get (g/get modeling "primitives") "square")
    (clj->js { "size" [x y] })))
 
-;; (defmethod write-expr :polygon [modeling [form {:keys [points paths convexity]}]]
+(defmethod write-expr :polygon [modeling [form {:keys [points paths convexity]}]]
+  (println paths)
+  ((g/get (g/get modeling "primitives") "polygon")
+   (clj->js (merge
+             (when points { "points" points })
+             (when paths { "paths" paths })
+             { "convexity" convexity }))))
   ;; `(~@(indent modeling) "polygon ({"
     ;; "points:[[" ~(join "], [" (map #(join ", " %1) points)) "]]"
     ;; ~@(when paths [", paths:[[" (join "], [" (map #(join "," %1) paths)) "]]"])

@@ -34,10 +34,7 @@
 ;; Modifier
 
 (defmethod write-expr :modifier [depth [form modifier & block]]
-  (concat
-   (list (indent depth) modifier "union (\n")
-   (write-block depth block)
-   (list (indent depth) ")\n")))
+  (write-block depth block))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; include and call into scad libraries.
@@ -250,10 +247,11 @@
 ;; Boolean operations
 
 (defmethod write-expr :union [depth [form & block]]
-  (concat
-   (list (indent depth) "union(\n")
-   (write-block depth block)
-   (list "\n" (indent depth) ")")))
+  (if (empty? block) (list "[]")
+      (concat
+       (list (indent depth) "union(\n")
+       (write-block depth block)
+       (list "\n" (indent depth) ")"))))
 
 (defmethod write-expr :difference [depth [form & block]]
   (concat
@@ -336,7 +334,7 @@
 (defn write-scad [& block]
   (join (concat
          (list
-          "const { circle, square, cuboid, sphere, cylinder, cylinderElliptic } = require('@jscad/modeling').primitives\n"
+          "const { circle, square, cuboid, sphere, cylinder, cylinderElliptic, polygon } = require('@jscad/modeling').primitives\n"
           "const { rotate, rotateX, rotateY, rotateZ, scale, translate, mirror } = require('@jscad/modeling').transforms\n"
           "const { intersection, subtract, union } = require('@jscad/modeling').booleans\n"
           "const { extrudeLinear, project } = require('@jscad/modeling').extrusions\n"
