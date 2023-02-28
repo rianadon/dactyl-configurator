@@ -184,8 +184,8 @@
 ;; Boolean operations
 
 (defmethod write-expr :union [modeling [form & block]]
-  (apply (g/get (g/get modeling "booleans") "union")
-    (write-block modeling block)))
+  (let [inner (write-block modeling block)]
+       (if (empty? inner) [] (apply (g/get (g/get modeling "booleans") "union") inner))))
 
 (defmethod write-expr :difference [modeling [form & block]]
   (apply (g/get (g/get modeling "booleans") "subtract")
