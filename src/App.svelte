@@ -140,7 +140,7 @@
     </div>
 
     <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2">Presets</h2>
-    <div class="mb-2 lg:flex justify-between items-baseline w-64 md:w-auto">
+    <div class="lg:flex justify-between items-baseline w-64 md:w-auto">
       <div class="mb-2 mr-4">Manuform</div>
       <div>
         <button class="preset" on:click={() => loadPreset(presetCorne)}>Corne</button>
@@ -149,7 +149,7 @@
         <button class="preset" on:click={() => loadPreset(presetMinidox)}>Minidox</button>
       </div>
     </div>
-    <div class="lg:flex mb-2 justify-between items-baseline">
+    <div class="lg:flex justify-between items-baseline">
       <div class="mb-2 mr-4">Lightcycle</div>
       <div>
         <button class="preset" on:click={() => loadPreset(presetLight)}>Basic</button>
