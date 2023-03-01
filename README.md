@@ -5,8 +5,8 @@
 </p>
 <br/>
 <p align="center">
-    <a href="https://ryanis.cool/dactyl"><img src="https://img.shields.io/website?url=https%3A%2F%2Fryanis.cool%2Fdactyl" alt="website status"></a>
-    <a href=""><img src="https://img.shields.io/github/checks-status/rianadon/dactyl-configurator/main" alt="GitHub commit checks"></a>
+    <a href="https://ryanis.cool/dactyl"><img src="https://img.shields.io/website?url=https%3A%2F%2Fryanis.cool%2Fdactyl" alt="Website Status"></a>
+    <a href=""><img src="https://img.shields.io/github/actions/workflow/status/rianadon/dactyl-configurator/test.yaml" alt="GitHub Workflow Status"></a>
 </p>
 <br/>
 
@@ -29,8 +29,9 @@ The new developments of this work are:
 
 ## Building and running
 
-ClojureScript and protobuf files can be built with the Makefile. After you've installed [Leiningen](https://leiningen.org/#install) and the [protobuf compiler](https://grpc.io/docs/protoc-installation/), run `make` to compile the files. They are placed in the `target` directory.
-To build the website, run `npm install` then `npm run dev`.
+You'll first need to install Node.js dependencies with `npm install`.
+ClojureScript and protobuf files can then be built with the Makefile. After you've installed [Leiningen](https://leiningen.org/#install) and the [protobuf compiler](https://grpc.io/docs/protoc-installation/), run `make` to compile the files. They are placed in the `target` directory.
+To build the website, run `npm run dev`.
 
 ### Useful Resources
 - [Clojurescript interop with javascript](https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html)
