@@ -1,24 +1,51 @@
+<p align="center">
+  <a href="https://ryanis.cool/dactyl" target="_blank" rel="noopener noreferrer">
+    <img width="180" src="public/favicon.svg" alt="Dactyl Configurator logo">
+  </a>
+</p>
+<br/>
+<p align="center">
+    <a href="https://ryanis.cool/dactyl"><img src="https://img.shields.io/website?url=https%3A%2F%2Fryanis.cool%2Fdactyl" alt="website status"></a>
+    <a href=""><img src="https://img.shields.io/github/checks-status/rianadon/dactyl-configurator/main" alt="GitHub commit checks"></a>
+</p>
+<br/>
+
 # Dactyl Web Configurator
 
 A web configurator for the Dactyl mechanical keyboard.
-It's based upon the wonderful work of @ibnuda's [web configurator](https://github.com/ibnuda/dactyl-keyboard), which reworks the organizes the configuration options in various commuity edits to the Dactyl keyboard into a JSON structure.
+It's based upon the wonderful work of @ibnuda's [web configurator](https://github.com/ibnuda/dactyl-keyboard), which organizes the configuration options in various commuity edits to a single JSON structure.
 
-The site uses the wonderful technologies of ClojureScript and WebAssembly to run all computations in the browser. This means you don't need a server to deploy it!
+The site uses ClojureScript and WebAssembly to run all computation in the browser. This means I don't have to pay for expensive servers to render everyone's cad models!
+
+![Screenshot of website](public/dactyl-configurator.png)
 
 The new developments of this work are:
-- All Clojure source files have been translated to ClojureScript, which can easily be run in the browser. The two languages are extremely similar, but there are a few key differences (lack of ratios, macro handling) that need to be taken into account.
+- All Clojure source files have been translated to [ClojureScript](https://clojurescript.org), which can easily be run in the browser. The two languages are extremely similar, but there are a few key differences (lack of ratios, macro handling) that need to be taken into account.
 - Using @DSchroer's [WebAssembly build of OpenSCAD](https://github.com/DSchroer/openscad-wasm), STL generation can happen entirely within the browser.
-- Fast CSG previews are generated using the OpenJSCAD project. It has a different API than OpenSCAD (most significantly, it's based on creating JS objects rather than creating a source file). I've added new back end to the scad-clj library to generate the OpenJSCAD objects.
-- Preview the CSG with Three.JS, using the Svelte-cubed bindings.
-- The ClojureScript source files are compiled into a web worker, which is run from Svelte/TypeScript frontend.
-- Configurations are compressed with protobuf and saved to the URL. This makes it easy to share configurations with others. I've also switched to using camelcase for the json configuration, which makes integrating with protobuf easier.
+- Fast CSG previews are generated using [OpenJSCAD project](https://github.com/jscad/OpenJSCAD.org). It has a different API than OpenSCAD (most significantly, it allows efficiently building geometries from JavaScript objects instead of concatenating giant strings into source code). I've added new back end to the [scad-clj](https://github.com/farrellm/scad-clj) library (which has been copied into this project due to how heavily I've edited it) to generate the OpenJSCAD objects.
+- CSGs are previewed with Three.JS, using the [Svelte-cubed](https://svelte-cubed.vercel.app) bindings.
+- The ClojureScript source files are compiled into a web worker, which is run from [Svelte](https://svelte.dev)/TypeScript frontend.
+- Configurations are compressed with [protobuf](https://protobuf.dev) and saved to the URL. This makes it easy to share configurations with others. I've also switched to using camelcase for the json configuration, which makes integrating with protobuf easier.
 
 ## Building and running
 
-ClojureScript and protobuf files can be built with the Makefile. Run `make` to build them. They are placed in the `target` directory.
-To develop the website, run `npm run dev`.
+ClojureScript and protobuf files can be built with the Makefile. After you've installed [Leiningen](https://leiningen.org/#install) and the [protobuf compiler](https://grpc.io/docs/protoc-installation/), run `make` to compile the files. They are placed in the `target` directory.
+To build the website, run `npm install` then `npm run dev`.
 
-## Useful Resources
+### Useful Resources
 - [Clojurescript interop with javascript](https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html)
 - [JSCAD user guide](https://openjscad.xyz/dokuwiki/doku.php)
 - [The Noble Effort To Put OpenSCAD In The Browser](https://hackaday.com/2022/03/14/the-noble-effort-to-put-openscad-in-the-browser/)
+
+## What are all these files?
+- `index.html` and `index.js`, and `public/`: Static files used for the website
+- `scripts/`: Node.js scripts for testing and developing new features
+- `src/`: Source code
+  - `assets/`: Models, JSON configuration, and WebAssembly files used by the frontend
+  - `cljs/`: ClojureScript source code
+    - `dactyl_generator`: Generate the Dactyl models. Most notably: `manuform.cljs`
+    - `dactyl_node`: Entry point for generating Dactyl models from a Node.js script (dev only)
+    - `dactyl_worker`: Entry point for the web worker that generates Dactyl models
+    - `scad_clj`: My modifications to the scad-clj library (simplifies outputting scad code)
+  - `lib`: Components and methods used by the frontend
+  - `proto`: Protobuf definitions

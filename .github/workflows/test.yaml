@@ -1,0 +1,26 @@
+name: Tests
+on: [push]
+
+jobs:
+  runtime-test:
+    name: Check that things compile
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: DeLaGuardo/setup-clojure@10.2
+        with:
+          cli: 1.10.1.693
+          lein: 2.9.1
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
+
+      - name: Compile code
+        run: make
+
+      - name: Build site
+        run: npm run build
