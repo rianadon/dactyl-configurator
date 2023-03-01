@@ -17,8 +17,8 @@ jobs:
         with:
           node-version: 19
 
-      - name: Install TypesScript protobuf generator
-        run: npm install -g ts-protoc-gen
+      - name: Install npm dependencies
+        run: npm ci
 
       - name: Compile code
         run: make
