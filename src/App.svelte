@@ -132,7 +132,7 @@
     <Github size="2em" />
   </a>-->
 </header>
-<main class="px-8 dark:text-slate-100 flex">
+<main class="px-8 dark:text-slate-100 flex flex-col-reverse xs:flex-row">
   <div class="w-80 md:w-auto">
     <div class="mb-8">
       <button class="button" on:click={downloadSCAD}>Download OpenSCAD</button>
@@ -171,7 +171,7 @@
         Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
       </div>
     {/if}
-    <div class="viewer sticky h-[100vh] top-0">
+    <div class="viewer relative xs:sticky h-[100vh] top-0">
       <Viewer geometries={geometries} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
       {#if csgError}
         <div class="absolute text-white m-4 left-0 right-0 rounded p-4 top-[10%] bg-red-700">
