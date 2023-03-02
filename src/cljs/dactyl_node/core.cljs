@@ -18,5 +18,8 @@
 (g/set js/exports "generateJSCAD" generate-jscad)
 (g/set js/exports "generateJS" generate-js)
 
+(g/set js/exports "radToAngle" hd/rad-to-angle)
+(g/set js/exports "degToAngle" hd/deg-to-angle)
+
 (g/set js/exports "defaultManuformState" (clj->js (gen/generate-json-dm (hd/api-generate-manuform {}) true)))
 (g/set js/exports "defaultLightcycleState" (clj->js (gen/generate-json-dl (hd/api-generate-lightcycle {}) true)))

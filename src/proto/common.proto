@@ -13,5 +13,6 @@ extend google.protobuf.FieldOptions {
   optional string help = 50001;
   optional int32 min = 50002;
   optional int32 max = 50003;
-  repeated Option dropdown = 50004;
+  optional bool angle = 50004;
+  repeated Option dropdown = 50005;
 }

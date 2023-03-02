@@ -1,17 +1,16 @@
 <script lang="ts">
-    import type { FieldSchema } from './schema'
-    import Popover from 'svelte-easy-popover';
-    import Help from 'svelte-material-icons/HelpCircle.svelte'
-    import ChevronDown from 'svelte-material-icons/ChevronDown.svelte'
-    import Check from 'svelte-material-icons/Check.svelte'
+ import type { FieldSchema } from './schema'
+ import AngleInput from './AngleInput.svelte'
+ import Popover from 'svelte-easy-popover';
+ import Help from 'svelte-material-icons/HelpCircle.svelte'
+ import ChevronDown from 'svelte-material-icons/ChevronDown.svelte'
+ import Check from 'svelte-material-icons/Check.svelte'
 
-    export let defl: string|boolean|Number;
-    export let schema: FieldSchema;
-    export let value: any;
+ export let defl: string|boolean|Number;
+ export let schema: FieldSchema;
+ export let value: any;
 
-    let referenceElement;
-
-    // hack to get rid of type warnings
+ let referenceElement;
 </script>
 
 <label class="block mb-2">
@@ -28,7 +27,11 @@
         {/if}
     </span>
     {#if typeof defl === "number"}
-        <input class="input px-2" type="number" min={schema.min} max={schema.max} bind:value={value}/>
+        {#if schema.angle }
+            <AngleInput bind:value={value} />
+        {:else}
+            <input class="input px-2" type="number" min={schema.min} max={schema.max} bind:value={value}/>
+        {/if}
     {:else if typeof defl === "boolean"}
         <!-- @ts-ignore -->
         <input class="opacity-0 absolute h-0 w-0" type="checkbox" bind:checked={value}/>

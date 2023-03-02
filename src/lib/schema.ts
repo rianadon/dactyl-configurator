@@ -30,6 +30,7 @@ function fieldToSchema(ns: string, field: FieldInfo) {
         help: field.options[ns + ".help"],
         min: field.options[ns + ".min"],
         max: field.options[ns + ".max"],
+        angle: field.options[ns + ".angle"],
         options: field.options[ns + ".dropdown"],
     }
     if (typeof field.T === "function") {

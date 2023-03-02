@@ -32,12 +32,12 @@ message Manuform {
     optional bool hide_last_pinky = 7 [(name) = "Hide Bottom Pinky?", (help) = "See Kinesis Advantage's Layout"];
   }
   message Curve {
-    optional int32 alpha = 1 [(min) = 4, (max) = 21, (name) = "Column's Curvature"];
-    optional int32 pinky_alpha = 2 [(min) = 4, (max) = 21, (name) = "Pinky Column's Curvature"];
-    optional int32 beta = 3 [(min) = 18, (max) = 64, (name) = "Row's Curvature"];
-    optional int32 centercol = 4 [(name) = "Center of the curvature for the column"];
-    optional int32 tenting = 5 [(name) = "Tenting Angle"];
-    optional int32 rotate_x = 6 [(name) = "Rotation around row axis"];
+    optional sint32 alpha = 1 [(angle) = true, (name) = "Column's Curvature"];
+    optional int32 pinky_alpha = 2 [(angle) = true, (name) = "Pinky Column's Curvature"];
+    optional sint32 beta = 3 [(angle) = true, (name) = "Row's Curvature"];
+    optional int32 centercol = 4 [(name) = "Center of the Curvature for the Column"];
+    optional sint32 tenting = 5 [(angle) = true, (name) = "Tenting Angle"];
+    optional sint32 rotate_x = 6 [(angle) = true, (name) = "Rotation Around Row Axis"];
   }
   message Connector {
     optional bool external = 1 [(name) = "Use External Holder"];

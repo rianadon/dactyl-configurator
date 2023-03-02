@@ -209,6 +209,10 @@
      .viewer { height: calc(100vh - 136px); top: 68px }
  }
 
+ @media (max-width: theme('screens.xs')) {
+     .viewer { @apply max-h-[50vh] mb-4 top-0; }
+ }
+
  .button {
      @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
  }

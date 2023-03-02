@@ -23,12 +23,12 @@ message Lightcycle {
     optional bool hide_last_pinky = 6 [(name) = "Hide Bottom Pinky?", (help) = "See Kinesis Advantage's Layout"];
   }
   message Curve {
-    optional int32 alpha = 1 [(min) = 4, (max) = 21, (name) = "Column Curvature"];
-    optional int32 beta = 2 [(min) = 18, (max) = 64, (name) = "Row Curvature"];
-    optional int32 tenting = 3 [(name) = "Tenting Angle"];
-    optional int32 thumb_alpha = 4 [(name) = "Thumb's Column Curvature"];
-    optional int32 thumb_beta = 5 [(name) = "Thumb's Row Curvature"];
-    optional int32 thumb_tenting = 6 [(name) = "Thumb Tenting Angle"];
+    optional sint32 alpha = 1 [(angle) = true, (name) = "Column Curvature"];
+    optional sint32 beta = 2 [(angle) = true, (name) = "Row Curvature"];
+    optional sint32 tenting = 3 [(angle) = true, (name) = "Tenting Angle"];
+    optional sint32 thumb_alpha = 4 [(angle) = true, (name) = "Thumb's Column Curvature"];
+    optional sint32 thumb_beta = 5 [(angle) = true, (name) = "Thumb's Row Curvature"];
+    optional sint32 thumb_tenting = 6 [(angle) = true, (name) = "Thumb Tenting Angle"];
   }
   message Connector {
     optional bool external = 1 [(name) = "Use External Holder"];

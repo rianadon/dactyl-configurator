@@ -4,7 +4,10 @@
             [dactyl-generator.lightcycle :as dl]
 ))
 
-(def pi Math/PI)
+(defn angle-to-rad [angle] (* Math/PI (/ angle 8100)))
+(defn rad-to-angle [rad] (* 8100 (/ rad Math/PI)))
+(defn deg-to-angle [deg] (/ (* 8100 deg) 180))
+(defn get-angle [key obj default] (angle-to-rad (get key obj (rad-to-angle default)) default))
 
 (defn api-generate-manuform [body]
   (let [keys           (get body "keys")
@@ -32,12 +35,12 @@
                         :configuration-inner-column                (keyword (get keys "innerColumn" "normie"))
                         :configuration-hide-last-pinky?            (get keys "hideLastPinky" false)
 
-                        :configuration-alpha                       (/ pi (get curve "alpha" 12))
-                        :configuration-pinky-alpha                 (/ pi (get curve "pinkyAlpha" 12))
-                        :configuration-beta                        (/ pi (get curve "beta" 36))
+                        :configuration-alpha                       (get-angle curve "alpha" (/ Math/PI 12))
+                        :configuration-pinky-alpha                 (get-angle curve "pinkyAlpha" (/ Math/PI 12))
+                        :configuration-beta                        (get-angle curve "beta" (/ Math/PI 36))
                         :configuration-centercol                   (get curve "centercol" 4)
-                        :configuration-tenting-angle               (/ pi (get curve "tenting" 15))
-                        :configuration-rotate-x-angle              (/ pi (get curve "rotateX" 15))
+                        :configuration-tenting-angle               (get-angle curve "tenting" (/ Math/PI 15))
+                        :configuration-rotate-x-angle              (get-angle curve "rotateX" (/ Math/PI 15))
 
                         :configuration-use-external-holder?        (get connector "external" false)
                         :configuration-connector-type              (keyword (get connector "type" "none"))
@@ -47,21 +50,21 @@
                         :configuration-thumb-cluster-offset-y      (get form "thumbClusterOffsetY" -3)
                         :configuration-thumb-cluster-offset-z      (get form "thumbClusterOffsetZ" 7)
                         :configuration-custom-thumb-cluster?       (get form "customThumbCluster" false)
-                        :configuration-thumb-top-right-tenting-x   (/ pi (get form "thumbTentingX" 10))
-                        :configuration-thumb-top-right-tenting-y   (/ pi (get form "thumbTentingY" -4))
-                        :configuration-thumb-top-right-tenting-z   (/ pi (get form "thumbTentingZ" 10))
+                        :configuration-thumb-top-right-tenting-x   (get-angle form "thumbTentingX" (/ Math/PI 10))
+                        :configuration-thumb-top-right-tenting-y   (get-angle form "thumbTentingY" (/ Math/PI -4))
+                        :configuration-thumb-top-right-tenting-z   (get-angle form "thumbTentingZ" (/ Math/PI 10))
                         :configuration-thumb-top-right-offset-x    (get form "thumbTopRightOffsetX" -15)
                         :configuration-thumb-top-right-offset-y    (get form "thumbTopRightOffsetY" -10)
                         :configuration-thumb-top-right-offset-z    (get form "thumbTopRightOffsetZ" 5)
-                        :configuration-thumb-top-left-tenting-x    (/ pi (get form "thumbTopLeftTentingX" 10))
-                        :configuration-thumb-top-left-tenting-y    (/ pi (get form "thumbTopLeftTentingY" -4))
-                        :configuration-thumb-top-left-tenting-z    (/ pi (get form "thumbTopLeftTentingZ" 10))
+                        :configuration-thumb-top-left-tenting-x    (get-angle form "thumbTopLeftTentingX" (/ Math/PI 10))
+                        :configuration-thumb-top-left-tenting-y    (get-angle form "thumbTopLeftTentingY" (/ Math/PI -4))
+                        :configuration-thumb-top-left-tenting-z    (get-angle form "thumbTopLeftTentingZ" (/ Math/PI 10))
                         :configuration-thumb-top-left-offset-x     (get form "thumbTopLeftOffsetX" -35)
                         :configuration-thumb-top-left-offset-y     (get form "thumbTopLeftOffsetY" -16)
                         :configuration-thumb-top-left-offset-z     (get form "thumbTopLeftOffsetZ" 2)
-                        :configuration-thumb-middle-left-tenting-x (/ pi (get form "thumbMiddleLeftTentingX" 10))
-                        :configuration-thumb-middle-left-tenting-y (/ pi (get form "thumbMiddleLeftTentingY" -4))
-                        :configuration-thumb-middle-left-tenting-z (/ pi (get form "thumbMiddleLeftTentingZ" 10))
+                        :configuration-thumb-middle-left-tenting-x (get-angle form "thumbMiddleLeftTentingX" (/ Math/PI 10))
+                        :configuration-thumb-middle-left-tenting-y (get-angle form "thumbMiddleLeftTentingY" (/ Math/PI -4))
+                        :configuration-thumb-middle-left-tenting-z (get-angle form "thumbMiddleLeftTentingZ" (/ Math/PI 10))
 
                         :configuration-thumb-middle-left-offset-x  (get form "thumbMiddleLeftOffsetX" -35)
                         :configuration-thumb-middle-left-offset-y  (get form "thumbMiddleLeftOffsetY" -16)
@@ -77,7 +80,7 @@
                         :configuration-use-wire-post?              (get form "wirePost" false)
                         :configuration-use-screw-inserts?          (get form "screwInserts" false)
                         :configuration-web-thickness               (get form "webThickness" 7.0)
-                        :configuration-wall-thickness               (get form "wallThickness" 3.0)
+                        :configuration-wall-thickness              (get form "wallThickness" 3.0)
 
                         :configuration-show-caps?                  (get misc "keycaps" false)
                         :configuration-plate-projection?           (not (get misc "case" true))
@@ -101,12 +104,12 @@
                         :configuration-use-alps?            false
                         :configuration-hide-last-pinky?     (get keys "hideLastPinky" false)
 
-                        :configuration-alpha                (/ pi (get curve "alpha" 12))
-                        :configuration-beta                 (/ pi (get curve "beta" 36))
-                        :configuration-tenting-angle        (/ pi (get curve "tenting" 12))
-                        :configuration-thumb-alpha          (/ pi (get curve "thumbAlpha" 12))
-                        :configuration-thumb-beta           (/ pi (get curve "thumbBeta" 36))
-                        :configuration-thumb-tenting-angle  (/ pi (get curve "thumbTenting" 12))
+                        :configuration-alpha                (get-angle curve "alpha" (/ Math/PI 12))
+                        :configuration-beta                 (get-angle curve "beta" (/ Math/PI 36))
+                        :configuration-tenting-angle        (get-angle curve "tenting" (/ Math/PI 12))
+                        :configuration-thumb-alpha          (get-angle curve "thumbAlpha" (/ Math/PI 12))
+                        :configuration-thumb-beta           (get-angle curve "thumbBeta" (/ Math/PI 36))
+                        :configuration-thumb-tenting-angle  (get-angle curve "thumbTenting" (/ Math/PI 12))
 
                         :configuration-use-external-holder? (get connector "external" false)
 

@@ -11,12 +11,12 @@
             "hideLastPinky": false
         },
         "curve": {
-            "alpha": 12,
-            "pinkyAlpha": 12,
-            "beta": 36,
+            "alpha": 675,
+            "pinkyAlpha": 675,
+            "beta": 225,
             "centercol": 4,
-            "tenting": 15,
-            "rotateX": 180
+            "tenting": 540,
+            "rotateX": 45
         },
         "connector": {
             "external": false,
