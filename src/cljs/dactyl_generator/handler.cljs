@@ -7,7 +7,7 @@
 (defn angle-to-rad [angle] (* Math/PI (/ angle 8100)))
 (defn rad-to-angle [rad] (* 8100 (/ rad Math/PI)))
 (defn deg-to-angle [deg] (/ (* 8100 deg) 180))
-(defn get-angle [key obj default] (angle-to-rad (get key obj (rad-to-angle default)) default))
+(defn get-angle [key obj default] (angle-to-rad (get key obj (rad-to-angle default))))
 
 (defn api-generate-manuform [body]
   (let [keys           (get body "keys")
