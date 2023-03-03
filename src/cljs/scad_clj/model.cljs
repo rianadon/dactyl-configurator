@@ -1,3 +1,8 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Source code is modified from the scad-clj project.
+;; It's licensed by github.com/farrellm under the Eclipse Public License 1.0.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (ns scad-clj.model
   (:refer-clojure :exclude [import use])
   (:require [clojure.walk :refer [postwalk]]

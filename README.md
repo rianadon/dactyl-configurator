@@ -30,8 +30,9 @@ The new developments of this work are:
 ## Building and running
 
 You'll first need to install Node.js dependencies with `npm install`.
-ClojureScript and protobuf files can then be built with the Makefile. After you've installed [Leiningen](https://leiningen.org/#install) and the [protobuf compiler](https://grpc.io/docs/protoc-installation/), run `make` to compile the files. They are placed in the `target` directory.
-To build the website, run `npm run dev`.
+ClojureScript and protobuf files can then be built with the Makefile. After you've installed [Leiningen](https://leiningen.org/#install) ~~and the [protobuf compiler](https://grpc.io/docs/protoc-installation/)~~ (it's installed by `npm install`), run `make` to compile the files.
+
+They compiled files are placed in the `target` directory. To build the website, run `npm run dev`.
 
 ### Useful Resources
 - [Clojurescript interop with javascript](https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html)

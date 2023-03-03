@@ -1,3 +1,8 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Source code is modified from the scad-clj project.
+;; It's licensed by github.com/farrellm under the Eclipse Public License 1.0.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (ns scad-clj.scad
   (:require [clojure.string :refer [join]]
             [scad-clj.model :refer [rad->deg]]))
