@@ -188,7 +188,9 @@
   `(:intersection  ~@block))
 
 (defn difference [ & block]
-  `(:difference  ~@block))
+  (if (> (count block) 1)
+    `(:difference  ~@block)
+    block))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; other

@@ -10,12 +10,12 @@
             "hideLastPinky": false
         },
         "curve": {
-            "alpha": 12,
-            "beta": 36,
-            "tenting": 12,
-            "thumbAlpha": 36,
-            "thumbBeta": 36,
-            "thumbTenting": 24
+            "alpha": 675,
+            "beta": 225,
+            "tenting": 675,
+            "thumbAlpha": 225,
+            "thumbBeta": 225,
+            "thumbTenting": 338
         },
         "connector": {
             "external": false
