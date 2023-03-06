@@ -49,7 +49,7 @@ message Manuform {
     optional bool micro_usb = 3 [(name) = "Micro USB Hole"];
   }
   message Form {
-    optional bool custom_thumb_cluster = 1 [(name) = "Custom Thumb Cluster (Experimental)"];
+    // optional bool custom_thumb_cluster = 1 [(name) = "Custom Thumb Cluster (Experimental)"];
     optional int32 height_offset = 2 [(min) = 4, (max) = 50, (name) = "Height Offset"];
     optional bool hotswap = 3 [(name) = "Hotswap Socket", (help) = "Use the Kailh (Dongguan Kaihua) Hot Swap Sockets"];
     optional bool screw_inserts = 4 [(name) = "Screw Inserts"];
