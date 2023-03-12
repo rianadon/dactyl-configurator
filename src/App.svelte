@@ -2,7 +2,9 @@
  import Viewer from './lib/Viewer.svelte'
  import Github from 'svelte-material-icons/Github.svelte'
  import Book from 'svelte-material-icons/BookOpenVariant.svelte'
- import { fromCSG } from './lib/csg'
+ import Info from 'svelte-material-icons/Information.svelte'
+ import Popover from 'svelte-easy-popover'
+ import { estimateFilament, fromCSG } from './lib/csg'
  import { exampleGeometry } from './lib/example'
 
  import workerUrl from '../target/dactyl_webworker.js?url'
@@ -30,6 +32,8 @@
  let stlUrl: string = model;
 
  let geometries = [];
+ let filament;
+ let referenceElement;
 
  let state: typeof manuform = JSON.parse(JSON.stringify(deserialize(location.hash.substring(1), manuform)));
  let myWorker: Worker = null;
@@ -112,6 +116,7 @@
              // Preview finished. Show it!
              generatingCSG = false;
              geometries = fromCSG(e.data.data);
+             filament = estimateFilament(e.data.data[0]?.volume);
          } else if (e.data.type == 'log') {
              if (e.data.data == 'Could not initialize localization.') {
                  // Replace the confusing localization message with something nicer.
@@ -172,7 +177,21 @@
       </div>
     {/if}
     <div class="viewer relative xs:sticky h-[100vh] top-0">
-      <Viewer geometries={geometries} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
+      <Viewer geometries={geometries} filament={filament} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
+      {#if filament}
+        <div class="absolute bottom-0 right-0 text-right mb-2">
+          {filament.length.toFixed(1)}m <span class="text-gray-600 dark:text-gray-100">of filament</span>
+          <div class="align-[-18%] inline-block text-gray-600 dark:text-gray-100" bind:this={referenceElement}>
+            <Info size="20px" />
+          </div>
+          <Popover triggerEvents={["hover", "focus"]} {referenceElement} placement="top" spaceAway={4}>
+            <div class="rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 mx-4 w-80">
+              <p>Estimate using 100% infill, no supports.</p>
+              <p>This will set you back at least ${filament.cost.toFixed(2)}.</p>
+            </div>
+          </Popover>
+        </div>
+      {/if}
       {#if csgError}
         <div class="absolute text-white m-4 left-0 right-0 rounded p-4 top-[10%] bg-red-700">
           <p>There are some rough edges in this tool, and you've found one of them.</p>

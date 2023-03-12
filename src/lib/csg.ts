@@ -5,6 +5,22 @@
 import { BufferGeometry, BufferAttribute } from "three";
 import { entitiesFromSolids } from "@jscad/regl-renderer"
 
+const VOLUME_MM2_TO_FILAMENT_M = 0.00042545;
+const LENGTH_M_TO_WEIGHT_G = 3; // A very coarse estimate
+const WEIGHT_G_TO_COST_USD = 25/1000; // Again, an estimate
+
+export interface FilamentEstimate {
+    length: number
+    cost: number
+}
+
+export function estimateFilament(volume?: number): FilamentEstimate {
+    if (!volume) return;
+    const length = volume * VOLUME_MM2_TO_FILAMENT_M;
+    const cost = length * LENGTH_M_TO_WEIGHT_G * WEIGHT_G_TO_COST_USD;
+    return { length, cost };
+}
+
 function toFlatTyped(array: any[], typed: Float32Array|Uint16Array) {
     let i = 0;
     for (const position of array) {

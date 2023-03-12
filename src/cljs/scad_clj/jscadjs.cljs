@@ -267,8 +267,9 @@
 ;; output
 
 (defn get-polygons [modeling model]
-  #js { "polygons" ((g/get (g/get (g/get modeling "geometries") "geom3") "toPolygons")
-    model) })
+  #js { "polygons" ((g/get (g/get (g/get modeling "geometries") "geom3") "toPolygons") model)
+        "volume" ((g/get (g/get modeling "measurements") "measureVolume") model)
+       })
 
 (defn write-scad [modeling & block]
   (map #(get-polygons modeling %1) (write-expr modeling block)))

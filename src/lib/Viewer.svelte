@@ -2,9 +2,11 @@
  import * as THREE from 'three';
  import * as SC from 'svelte-cubed';
  import PerspectiveCamera from './PerspectiveCamera.svelte';
+ import type { FilamentEstimate } from './csg';
 
  export let geometries: THREE.Geometry[];
  export let style: string;
+ export let filament: FilamentEstimate;
 
  let canvas;
  let camera: THREE.PerspectiveCamera;
