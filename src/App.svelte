@@ -50,7 +50,11 @@
      if (!geometries.length) geometries = [g]
  })
 
- $: window.location.hash = serialize(state);
+ $: try {
+     window.location.hash = serialize(state);
+ } catch (e) {
+     console.error(e);
+ }
  $: process(state);
 
  let schema: Schema
