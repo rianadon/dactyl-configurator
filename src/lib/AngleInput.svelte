@@ -9,7 +9,7 @@
  }
 </script>
 
-<div class="whitespace-nowrap">
+<div class="whitespace-nowrap inline">
     <input class="input {small ? "w-20 pl-2" : "w-36 px-2"} ml-2 rounded-l" type="number" min="-179" max="180" value={degrees} step="0.1" on:change={onChange} /><span class="input px-2 w-8 mr-2 rounded-r">&deg;</span>
 </div>
 

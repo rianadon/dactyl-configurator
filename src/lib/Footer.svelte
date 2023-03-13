@@ -11,7 +11,7 @@
     Special thanks to everyone who has made the Dactyl keyboard possible, including <a class="darka" href="https://github.com/adereth">@adereth</a> (original Dactyl Design), <a class="darka"  href="https://github.com/tshort">@tshort</a> (Dactyl Manuform) and <a class="darka" href="https://github.com/ibnuda">@ibnuda</a> (Dactyl Generator).
 </p>
 <p class="mb-2 text-gray-500 dark:text-gray-400">
-    If you're looking for thumb offsets, trackballs, or more advanced settings, I recommend you check out either <a href="https://github.com/joshreve/dactyl-keyboard">@joshreve's</a> or <a href="https://github.com/bullwinkle3000/dactyl-keyboard">@bullwinkle3000's</a> CadQuery generators, which can also output STEP files.
+    If you're looking for trackballs or more advanced settings, I recommend you check out either <a href="https://github.com/joshreve/dactyl-keyboard">@joshreve's</a> or <a href="https://github.com/bullwinkle3000/dactyl-keyboard">@bullwinkle3000's</a> CadQuery generators, which can also output STEP files.
 </p>
 <p class="mb-2 text-gray-500 dark:text-gray-400">
     Do not fear if you see holes in your model preview or if your keyboard looks holy (sorry). Downloading the STL file may give you a complete, hole-free model.
