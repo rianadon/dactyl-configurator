@@ -5,11 +5,11 @@
  import ShapingTable from './ShapingTable.svelte'
  import presetDefault from '../assets/presets/manuthumb.default.json'
  import presetWacky from '../assets/presets/manuthumb.wacky.json'
+ import manuform from '../assets/manuform.json'
 
  export let state: object;
  export let states: object;
- export let customSchema: any;
- export let staggerSchema: any;
+ export let schema: FieldSchema;
 
  const ML_THUMBS = ['six', 'five', 'four', 'three', 'three-mini'];
  const MR_THUMBS = ['six', 'five', 'four'];
@@ -22,7 +22,7 @@
 
  $: cols = state.options.keys?.columns;
  $: thumbs = state.options.keys?.thumbCount;
- $: sEn = states[staggerSchema.var]
+ $: sEn = states.stagger;
  $: staggerEnabled = [true, sEn && cols>1, sEn && cols>2, sEn && cols>3, sEn && cols>4];
  $: staggerStyle = staggerEnabled.map(x => x ? '' : 'opacity-30');
 
@@ -36,8 +36,9 @@
   </div>
 </div>
 
-<Field defl={true} schema={staggerSchema} bind:value={states[staggerSchema.var]} />
-<Field defl={false} schema={customSchema} bind:value={states[customSchema.var]} />
+{#each schema.fields.filter(f => !f.special) as key}
+  <Field defl={manuform.options.shaping[key.var]} schema={key} bind:value={states[key.var]} />
+{/each}
 
 <div class="w-full xs:w-[19rem] overflow-auto lg:w-full">
 <table class="mt-4">
@@ -84,7 +85,7 @@
 </table>
 
 
-{#if states[customSchema.var]}
+{#if states.customThumbCluster}
   <ShapingTable level="Top" bind:states={states} />
   <ShapingTable level="Middle" bind:states={states}
                 left={ML_THUMBS.includes(thumbs)}

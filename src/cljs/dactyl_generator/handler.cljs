@@ -86,6 +86,8 @@
                         :configuration-thumb-bottom-right-offset-x  (get shaping "thumbBottomRightOffsetX" -29)
                         :configuration-thumb-bottom-right-offset-y  (get shaping "thumbBottomRightOffsetY" -41)
                         :configuration-thumb-bottom-right-offset-z  (get shaping "thumbBottomRightOffsetZ" -13)
+                        :configuration-extra-width                 (get shaping "extraWidth")
+                        :configuration-extra-height                (get shaping "extraHeight")
                         :configuration-use-hotswap?                (get form "hotswap" false)
                         :configuration-stagger?                    (get shaping "stagger" true)
                         :configuration-ibnuda-edits?               (get form "ibnudaEdits" true)

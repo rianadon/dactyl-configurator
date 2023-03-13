@@ -12,13 +12,15 @@
   "extra width between two keys in a row."
   [c]
   (let [nrows (get c :configuration-nrows 5)
-        lightcycle? (get c :configuration-lightcycle?)]
-    (if lightcycle? 2 (if (> nrows 5) 3.5 2.5))))
+        lightcycle? (get c :configuration-lightcycle?)
+        default (if lightcycle? 2 (if (> nrows 5) 3.5 2.5))]
+    (get c :configuration-extra-width default)))
 (defn extra-height
   "extra height between two keys in a column."
   [c]
-  (let [lightcycle? (get c :configuration-lightcycle?)]
-    (if lightcycle? 0.5 1.0)))
+  (let [lightcycle? (get c :configuration-lightcycle?)
+        default (if lightcycle? 0.5 1.0)]
+    (get c :configuration-extra-height default)))
 
 (defn keyswitch-height
   "the y dimension of an mx style keyswitch, in millimeter."

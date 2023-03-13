@@ -172,14 +172,9 @@
 
     {#each schema as section}
       <div class="mt-8">
-          <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2 capitalize">{section.name}</h2>
-          {#if section.special }
-              {#if section.name == "Shaping"}
-                  <ShapingSection state={state} customSchema={section.fields[0]} staggerSchema={section.fields[1]}
-                                  bind:states={state.options[section.var]} />
-          {:else}
-            Unknown special section!
-          {/if}
+        <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2 capitalize">{section.name}</h2>
+        {#if section.var == "shaping"}
+          <ShapingSection state={state} schema={section} bind:states={state.options[section.var]} />
         {:else}
           {#each section.fields as key}
             <Field defl={defaults.options[section.var][key.var]} schema={key} bind:value={state.options[section.var][key.var]} />

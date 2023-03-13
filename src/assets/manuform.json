@@ -81,7 +81,9 @@
             "thumbTopRightOffsetZ": 3,
             "thumbTopRightTentingX": 450,
             "thumbTopRightTentingY": -1035,
-            "thumbTopRightTentingZ": 450
+            "thumbTopRightTentingZ": 450,
+            "extraWidth": 2.5,
+            "extraHeight": 1
         },
         "misc": {
             "keycaps": false,
