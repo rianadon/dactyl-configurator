@@ -25,7 +25,7 @@
 
  import presetLight from './assets/presets/lightcycle.default.json'
  import presetErgodox from './assets/presets/manuform.ergodox.json'
- import presetMinidox from './assets/presets/manuform.minidox.json'
+ import presetOriginal from './assets/presets/manuform.tshort.json'
  import presetCorne from './assets/presets/manuform.corne.json'
  import presetSmallest from './assets/presets/manuform.smallest.json'
 
@@ -160,7 +160,7 @@
         <button class="preset" on:click={() => loadPreset(presetCorne)}>Corne</button>
         <button class="preset" on:click={() => loadPreset(presetSmallest)}>Smallest</button>
         <button class="preset" on:click={() => loadPreset(presetErgodox)}>Ergodox</button>
-        <button class="preset" on:click={() => loadPreset(presetMinidox)}>Minidox</button>
+        <button class="preset" on:click={() => loadPreset(presetOriginal)}>Original</button>
       </div>
     </div>
     <div class="lg:flex justify-between items-baseline">

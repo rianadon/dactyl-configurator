@@ -7,6 +7,9 @@ export interface FieldSchema {
     help?: string
     min?: number
     max?: number
+    angle?: boolean
+    special?: boolean
+    float?: boolean
     options?: {
         name: string
         value: string
@@ -23,8 +26,8 @@ interface FieldInfo {
     options: any[]
 }
 
-function fieldToSchema(ns: string, field: FieldInfo) {
-    if (!field.options) return { var: field.jsonName };
+function fieldToSchema(ns: string, field: FieldInfo): FieldSchema {
+    if (!field.options) return { var: field.jsonName, name: "" };
 
     const schema: FieldSchema = {
         var: field.jsonName,
@@ -35,6 +38,7 @@ function fieldToSchema(ns: string, field: FieldInfo) {
         angle: field.options[ns + ".angle"],
         options: field.options[ns + ".dropdown"],
         special: field.options[ns + ".special"],
+        float: field.T === 2,
     }
     if (typeof field.T === "function") {
         schema.fields = fieldsToSchema(ns, field.T().fields)

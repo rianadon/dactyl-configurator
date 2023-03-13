@@ -49,11 +49,11 @@ message Manuform {
     optional bool micro_usb = 3 [(name) = "Micro USB Hole"];
   }
   message Form {
-    optional int32 height_offset = 2 [(min) = 4, (max) = 50, (name) = "Height Offset"];
+    optional float height_offset = 10 [(min) = 4, (max) = 50, (name) = "Height Offset"];
     optional bool hotswap = 3 [(name) = "Hotswap Socket", (help) = "Use the Kailh (Dongguan Kaihua) Hot Swap Sockets"];
     optional bool screw_inserts = 4 [(name) = "Screw Inserts"];
-    optional int32 web_thickness = 6 [(name) = "Web Thickness", (help) = "Top Part of Keyboard Around Keyholes"];
-    optional int32 wall_thickness = 7 [(name) = "Wall Thickness", (help) = "Thickness Around the Keyboard"];
+    optional float web_thickness = 11 [(name) = "Web Thickness", (help) = "Top Part of Keyboard Around Keyholes"];
+    optional float wall_thickness = 12 [(name) = "Wall Thickness", (help) = "Thickness Around the Keyboard"];
     optional bool wide_pinky = 8 [(name) = "Wide Pinky"];
     optional bool wire_post = 9 [(name) = "Wire Posts"];
   }

@@ -1,6 +1,7 @@
 <script lang="ts">
  import type { FieldSchema } from './schema'
  import AngleInput from './AngleInput.svelte'
+ import FloatInput from './FloatInput.svelte'
  import Popover from 'svelte-easy-popover';
  import Help from 'svelte-material-icons/HelpCircle.svelte'
  import ChevronDown from 'svelte-material-icons/ChevronDown.svelte'
@@ -29,6 +30,8 @@
     {#if typeof defl === "number"}
         {#if schema.angle }
             <AngleInput bind:value={value} />
+        {:else if schema.float}
+            <FloatInput class="mx-2 px-2 w-44" bind:value={value} />
         {:else}
             <input class="input px-2" type="number" min={schema.min} max={schema.max} bind:value={value}/>
         {/if}
