@@ -2,6 +2,7 @@
  import * as THREE from 'three';
  import * as SC from 'svelte-cubed';
  import PerspectiveCamera from './PerspectiveCamera.svelte';
+ import WebGL from 'three/examples/jsm/capabilities/WebGL'
 
  export let geometries: THREE.Geometry[];
  export let style: string;
@@ -63,15 +64,22 @@
 
 <svelte:window on:resize={resize} />
 
-<div class="container" bind:this={canvas} style={style}>
+{#if WebGL.isWebGLAvailable()}
+  <div class="container" bind:this={canvas} style={style}>
     <SC.Canvas antialias alpha={true}>
-        {#each geometries as geometry}
-	        <SC.Mesh geometry={geometry} />
-        {/each}
-	    <PerspectiveCamera fov={cameraFOV} bind:self={camera} bind:root={root} />
-        <SC.OrbitControls enableZoom={false} />
+      {#each geometries as geometry}
+	    <SC.Mesh geometry={geometry} />
+      {/each}
+	  <PerspectiveCamera fov={cameraFOV} bind:self={camera} bind:root={root} />
+      <SC.OrbitControls enableZoom={false} />
     </SC.Canvas>
-</div>
+  </div>
+{:else}
+  <div class="border border-2 border-red-400 py-2 px-4 m-2 rounded bg-white dark:bg-gray-900">
+    <p>The preview could not be loaded. This is because:</p>
+    <p>{@html WebGL.getWebGLErrorMessage().innerHTML.replace('<a', '<a class="underline"')}.</p>
+  </div>
+{/if}
 <style>
  .container {
      position: absolute;
