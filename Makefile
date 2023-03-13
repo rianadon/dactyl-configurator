@@ -1,5 +1,10 @@
-.PHONY : all
-all: target/dactyl_webworker.js target/dactyl_node.cjs target/proto/manuform.ts target/proto/lightcycle.ts
+.PHONY : all build test
+build: target/dactyl_webworker.js target/dactyl_node.cjs target/proto/manuform.ts target/proto/lightcycle.ts
+
+test:
+	$(MAKE) -C test
+
+all: build test
 
 target/proto/manuform.ts: src/proto/manuform.proto
 	npx protoc --ts_out target --proto_path src $<

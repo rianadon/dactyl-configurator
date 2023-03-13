@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Compile code
-        run: make
+        run: make all
 
       - name: Build site
         run: npm run build
