@@ -20,6 +20,7 @@
  import Field from './lib/Field.svelte';
  import RenderDialog from './lib/RenderDialog.svelte';
  import Footer from './lib/Footer.svelte';
+ import ShapingSection from './lib/ShapingSection.svelte';
  import { serialize, deserialize } from './lib/serialize';
 
  import presetLight from './assets/presets/lightcycle.default.json'
@@ -62,7 +63,11 @@
  $: defaults = (state.keyboard == "manuform" ? manuform : lightcycle);
 
  function loadPreset(preset: object) {
-     state = JSON.parse(JSON.stringify(preset))
+     const defaults = preset.keyboard == "manuform" ? manuform : lightcycle;
+     state = JSON.parse(JSON.stringify({
+         keyboard: preset.keyboard,
+         options: { ...defaults.options, ...preset.options }
+     }))
  }
 
  /** Downloads a blob using a given filename */
@@ -142,7 +147,7 @@
   </a>-->
 </header>
 <main class="px-8 dark:text-slate-100 flex flex-col-reverse xs:flex-row">
-  <div class="w-80 md:w-auto">
+  <div class="xs:w-80 md:w-auto">
     <div class="mb-8">
       <button class="button" on:click={downloadSCAD}>Download OpenSCAD</button>
       <button class="button" on:click={downloadSTL}>Download STL</button>
@@ -167,10 +172,19 @@
 
     {#each schema as section}
       <div class="mt-8">
-        <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2 capitalize">{section.name}</h2>
-        {#each section.fields as key}
-          <Field defl={defaults.options[section.var][key.var]} schema={key} bind:value={state.options[section.var][key.var]} />
-        {/each}
+          <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2 capitalize">{section.name}</h2>
+          {#if section.special }
+              {#if section.name == "Shaping"}
+                  <ShapingSection state={state} customSchema={section.fields[0]} staggerSchema={section.fields[1]}
+                                  bind:states={state.options[section.var]} />
+          {:else}
+            Unknown special section!
+          {/if}
+        {:else}
+          {#each section.fields as key}
+            <Field defl={defaults.options[section.var][key.var]} schema={key} bind:value={state.options[section.var][key.var]} />
+          {/each}
+        {/if}
       </div>
     {/each}
   </div>

@@ -429,13 +429,19 @@
         x-rotation  (thumb-tenting c (if is-mini? 6 -4) :configuration-thumb-bottom-left-tenting-x)
         y-rotation  (thumb-tenting c (if is-mini? -32 -35) :configuration-thumb-bottom-left-tenting-y)
         z-rotation  (thumb-tenting c (if is-mini? 35 52) :configuration-thumb-bottom-left-tenting-z)
-        movement    (if is-mini? [-51 -25 -11.5] [-56.3 -43.3 -23.5])]
+        custom-offsets? (get c :configuration-custom-thumb-cluster?)
+        default-xyz (if is-mini? [-51 -25 -11.5] [-56.3 -43.3 -23.5])
+        offset    (if custom-offsets?
+                    [(get c :configuration-thumb-bottom-left-offset-x)
+                     (get c :configuration-thumb-bottom-left-offset-y)
+                     (get c :configuration-thumb-bottom-left-offset-z)]
+                    default-xyz)]
     (->> shape
          (rotate x-rotation [1 0 0])
          (rotate y-rotation [0 1 0])
          (rotate z-rotation [0 0 1])
          (translate (thumborigin c))
-         (translate movement))))
+         (translate offset))))
 
 (defn thumb-br-place [c shape]
   (let [thumb-count (get c :configuration-thumb-count)
@@ -444,13 +450,19 @@
         x-rotation  (thumb-tenting c (if is-mini? 6 -16) :configuration-thumb-bottom-right-tenting-x)
         y-rotation  (thumb-tenting c (if is-mini? -34 -33) :configuration-thumb-bottom-right-tenting-y)
         z-rotation  (thumb-tenting c (if is-mini? 35 54) :configuration-thumb-bottom-right-tenting-z)
-        movement    (if is-mini? [-39 -43 -16] [-37.8 -55.3 -25.3])]
+        custom-offsets? (get c :configuration-custom-thumb-cluster?)
+        default-xyz (if is-mini? [-39 -43 -16] [-37.8 -55.3 -25.3])
+        offset    (if custom-offsets?
+                    [(get c :configuration-thumb-bottom-right-offset-x)
+                     (get c :configuration-thumb-bottom-right-offset-y)
+                     (get c :configuration-thumb-bottom-right-offset-z)]
+                    default-xyz)]
     (->> shape
          (rotate x-rotation [1 0 0])
          (rotate y-rotation [0 1 0])
          (rotate z-rotation [0 0 1])
          (translate (thumborigin c))
-         (translate movement))))
+         (translate offset))))
 
 (defn thumb-1x-layout [c shape]
   (let [thumb-count (get c :configuration-thumb-count)]

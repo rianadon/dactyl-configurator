@@ -49,15 +49,64 @@ message Manuform {
     optional bool micro_usb = 3 [(name) = "Micro USB Hole"];
   }
   message Form {
-    // optional bool custom_thumb_cluster = 1 [(name) = "Custom Thumb Cluster (Experimental)"];
     optional int32 height_offset = 2 [(min) = 4, (max) = 50, (name) = "Height Offset"];
     optional bool hotswap = 3 [(name) = "Hotswap Socket", (help) = "Use the Kailh (Dongguan Kaihua) Hot Swap Sockets"];
     optional bool screw_inserts = 4 [(name) = "Screw Inserts"];
-    optional bool stagger = 5 [(name) = "Stagger"];
     optional int32 web_thickness = 6 [(name) = "Web Thickness", (help) = "Top Part of Keyboard Around Keyholes"];
     optional int32 wall_thickness = 7 [(name) = "Wall Thickness", (help) = "Thickness Around the Keyboard"];
     optional bool wide_pinky = 8 [(name) = "Wide Pinky"];
     optional bool wire_post = 9 [(name) = "Wire Posts"];
+  }
+  message Shaping {
+    optional bool custom_thumb_cluster = 48 [(name) = "Custom Thumb Cluster"];
+    optional bool stagger = 49 [(name) = "Stagger"];
+    optional float stagger_index_y = 1;
+    optional float stagger_index_z = 2;
+    optional float stagger_middle_y = 3;
+    optional float stagger_middle_z = 4;
+    optional float stagger_pinky_y = 5;
+    optional float stagger_pinky_z = 6;
+    optional float stagger_ring_y = 7;
+    optional float stagger_ring_z = 8;
+    optional float thumb_cluster_offset_x = 9;
+    optional float thumb_cluster_offset_y = 10;
+    optional float thumb_cluster_offset_z = 11;
+    optional float thumb_bottom_left_offset_x = 12;
+    optional float thumb_bottom_left_offset_y = 13;
+    optional float thumb_bottom_left_offset_z = 14;
+    optional sint32 thumb_bottom_left_tenting_x = 15 [(angle) = true];
+    optional sint32 thumb_bottom_left_tenting_y = 16 [(angle) = true];
+    optional sint32 thumb_bottom_left_tenting_z = 17 [(angle) = true];
+    optional float thumb_bottom_right_offset_x = 18;
+    optional float thumb_bottom_right_offset_y = 19;
+    optional float thumb_bottom_right_offset_z = 20;
+    optional sint32 thumb_bottom_right_tenting_x = 21 [(angle) = true];
+    optional sint32 thumb_bottom_right_tenting_y = 22 [(angle) = true];
+    optional sint32 thumb_bottom_right_tenting_z = 23 [(angle) = true];
+    optional float thumb_middle_left_offset_x = 24;
+    optional float thumb_middle_left_offset_y = 25;
+    optional float thumb_middle_left_offset_z = 26;
+    optional sint32 thumb_middle_left_tenting_x = 27 [(angle) = true];
+    optional sint32 thumb_middle_left_tenting_y = 28 [(angle) = true];
+    optional sint32 thumb_middle_left_tenting_z = 29 [(angle) = true];
+    optional float thumb_middle_right_offset_x = 30;
+    optional float thumb_middle_right_offset_y = 31;
+    optional float thumb_middle_right_offset_z = 32;
+    optional sint32 thumb_middle_right_tenting_x = 33 [(angle) = true];
+    optional sint32 thumb_middle_right_tenting_y = 34 [(angle) = true];
+    optional sint32 thumb_middle_right_tenting_z = 35 [(angle) = true];
+    optional float thumb_top_left_offset_x = 36;
+    optional float thumb_top_left_offset_y = 37;
+    optional float thumb_top_left_offset_z = 38;
+    optional sint32 thumb_top_left_tenting_x = 39 [(angle) = true];
+    optional sint32 thumb_top_left_tenting_y = 40 [(angle) = true];
+    optional sint32 thumb_top_left_tenting_z = 41 [(angle) = true];
+    optional float thumb_top_right_offset_x = 42;
+    optional float thumb_top_right_offset_y = 43;
+    optional float thumb_top_right_offset_z = 44;
+    optional sint32 thumb_top_right_tenting_x = 45 [(angle) = true];
+    optional sint32 thumb_top_right_tenting_y = 46 [(angle) = true];
+    optional sint32 thumb_top_right_tenting_z = 47 [(angle) = true];
   }
   message Misc {
     optional bool keycaps = 1 [(name) = "Show Keycaps"];
@@ -68,5 +117,6 @@ message Manuform {
   optional Curve curve = 2 [(name) = "Curve"];
   optional Connector connector = 3 [(name) = "Connector"];
   optional Form form = 4 [(name) = "Form"];
+  optional Shaping shaping = 6 [(name) = "Shaping", (special) = true];
   optional Misc misc = 5 [(name) = "Misc"];
 }

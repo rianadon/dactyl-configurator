@@ -24,6 +24,8 @@ interface FieldInfo {
 }
 
 function fieldToSchema(ns: string, field: FieldInfo) {
+    if (!field.options) return { var: field.jsonName };
+
     const schema: FieldSchema = {
         var: field.jsonName,
         name: field.options[ns + ".name"],
@@ -32,6 +34,7 @@ function fieldToSchema(ns: string, field: FieldInfo) {
         max: field.options[ns + ".max"],
         angle: field.options[ns + ".angle"],
         options: field.options[ns + ".dropdown"],
+        special: field.options[ns + ".special"],
     }
     if (typeof field.T === "function") {
         schema.fields = fieldsToSchema(ns, field.T().fields)

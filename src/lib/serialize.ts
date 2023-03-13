@@ -11,28 +11,28 @@ interface State {
 
 const SPLIT_CHAR = ":"
 
-/** Write the difference between data and reference to output.
-    Return true if a difference was found */
-function difference(data, reference, output) {
+/** Return true if there is a difference between the two objects */
+function areDifferent(data, reference) {
     return Object.keys(data).reduce((diff, key) => {
-        if (data[key] != reference[key]) {
-            output[key] = data[key]
-            return true
-        }
-        return diff
+        return (data[key] != reference[key]) || diff;
     }, false)
 }
 
-/** difference, but operates on objects of objects */
+/** Discard sub-dicts that are the same between two objects of objects. */
 function difference2(data, reference, output) {
     return Object.keys(data).reduce((diff, key) => {
-        output[key] = {}
-        return difference(data[key], reference[key], output[key]) || diff
+        if (areDifferent(data[key], reference[key])) {
+            output[key] = data[key];
+            console.log(key, 'differs');
+            return true;
+        }
+        return diff;
     }, false)
 }
 
+/** Fill in missing sections from a reference dictionary. */
 function recreate2(data, reference) {
-    return Object.keys(data).reduce((diff, key) => {
+    return Object.keys(reference).reduce((diff, key) => {
         diff[key] = {...reference[key], ...data[key]}
         return diff
     }, {})
@@ -43,12 +43,12 @@ export function serialize(state: State) {
     if (state.keyboard === "manuform") {
         const diff = {}
         if (!difference2(state.options, manuform.options, diff)) return "manuform"
-        data = Manuform.toBinary(state.options, manuform.options)
+        data = Manuform.toBinary(diff)
     }
     if (state.keyboard === "lightcycle") {
         const diff = {}
         if (!difference2(state.options, lightcycle.options, diff)) return "lightcycle"
-        data = Lightcycle.toBinary(state.options, lightcycle.options)
+        data = Lightcycle.toBinary(diff)
     }
     return state.keyboard + SPLIT_CHAR + btoa(String.fromCharCode(...data));
 }
