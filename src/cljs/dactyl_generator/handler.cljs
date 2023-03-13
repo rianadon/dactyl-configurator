@@ -1,8 +1,7 @@
 (ns dactyl-generator.handler
   (:require [dactyl-generator.generator :as g]
             [dactyl-generator.manuform :as dm]
-            [dactyl-generator.lightcycle :as dl]
-))
+            [dactyl-generator.lightcycle :as dl]))
 
 (defn angle-to-rad [angle] (* Math/PI (/ angle 8100)))
 (defn rad-to-angle [rad] (* 8100 (/ rad Math/PI)))
@@ -14,14 +13,15 @@
         curve          (get body "curve")
         connector      (get body "connector")
         form           (get body "form")
-        index-y        (get form "staggerIndexY" 0)
-        index-z        (get form "staggerIndexZ" 0)
-        middle-y       (get form "staggerMiddleY" 2.8)
-        middle-z       (get form "staggerMiddleZ" -6.5)
-        ring-y         (get form "staggerRingY" 0)
-        ring-z         (get form "staggerRingZ" 0)
-        pinky-y        (get form "staggerPinkyY" -13)
-        pinky-z        (get form "staggerPinkyZ" 6)
+        shaping        (get body "shaping")
+        index-y        (get shaping "staggerIndexY" 0)
+        index-z        (get shaping "staggerIndexZ" 0)
+        middle-y       (get shaping "staggerMiddleY" 2.8)
+        middle-z       (get shaping "staggerMiddleZ" -6.5)
+        ring-y         (get shaping "staggerRingY" 0)
+        ring-z         (get shaping "staggerRingZ" 0)
+        pinky-y        (get shaping "staggerPinkyY" -13)
+        pinky-z        (get shaping "staggerPinkyZ" 6)
         stagger-index  [0 index-y index-z]
         stagger-middle [0 middle-y middle-z]
         stagger-ring   [0 ring-y ring-z]
@@ -46,31 +46,38 @@
                         :configuration-connector-type              (keyword (get connector "type" "none"))
                         :configuration-use-promicro-usb-hole?      (get connector "microUsb" false)
 
-                        :configuration-thumb-cluster-offset-x      (get form "thumbClusterOffsetX" 6)
-                        :configuration-thumb-cluster-offset-y      (get form "thumbClusterOffsetY" -3)
-                        :configuration-thumb-cluster-offset-z      (get form "thumbClusterOffsetZ" 7)
+                        :configuration-thumb-cluster-offset-x      (get shaping "thumbClusterOffsetX" 6)
+                        :configuration-thumb-cluster-offset-y      (get shaping "thumbClusterOffsetY" -3)
+                        :configuration-thumb-cluster-offset-z      (get shaping "thumbClusterOffsetZ" 7)
                         :configuration-custom-thumb-cluster?       (get form "customThumbCluster" false)
-                        :configuration-thumb-top-right-tenting-x   (get-angle form "thumbTentingX" (/ Math/PI 10))
-                        :configuration-thumb-top-right-tenting-y   (get-angle form "thumbTentingY" (/ Math/PI -4))
-                        :configuration-thumb-top-right-tenting-z   (get-angle form "thumbTentingZ" (/ Math/PI 10))
-                        :configuration-thumb-top-right-offset-x    (get form "thumbTopRightOffsetX" -15)
-                        :configuration-thumb-top-right-offset-y    (get form "thumbTopRightOffsetY" -10)
-                        :configuration-thumb-top-right-offset-z    (get form "thumbTopRightOffsetZ" 5)
-                        :configuration-thumb-top-left-tenting-x    (get-angle form "thumbTopLeftTentingX" (/ Math/PI 10))
-                        :configuration-thumb-top-left-tenting-y    (get-angle form "thumbTopLeftTentingY" (/ Math/PI -4))
-                        :configuration-thumb-top-left-tenting-z    (get-angle form "thumbTopLeftTentingZ" (/ Math/PI 10))
-                        :configuration-thumb-top-left-offset-x     (get form "thumbTopLeftOffsetX" -35)
-                        :configuration-thumb-top-left-offset-y     (get form "thumbTopLeftOffsetY" -16)
-                        :configuration-thumb-top-left-offset-z     (get form "thumbTopLeftOffsetZ" 2)
-                        :configuration-thumb-middle-left-tenting-x (get-angle form "thumbMiddleLeftTentingX" (/ Math/PI 10))
-                        :configuration-thumb-middle-left-tenting-y (get-angle form "thumbMiddleLeftTentingY" (/ Math/PI -4))
-                        :configuration-thumb-middle-left-tenting-z (get-angle form "thumbMiddleLeftTentingZ" (/ Math/PI 10))
-
-                        :configuration-thumb-middle-left-offset-x  (get form "thumbMiddleLeftOffsetX" -35)
-                        :configuration-thumb-middle-left-offset-y  (get form "thumbMiddleLeftOffsetY" -16)
-                        :configuration-thumb-middle-left-offset-z  (get form "thumbMiddleLeftOffsetZ" 2)
+                        :configuration-thumb-top-right-tenting-x   (get-angle shaping "thumbTopRightTentingX" (/ Math/PI 10))
+                        :configuration-thumb-top-right-tenting-y   (get-angle shaping "thumbTopRightTentingY" (/ Math/PI -4))
+                        :configuration-thumb-top-right-tenting-z   (get-angle shaping "thumbTopRightTentingZ" (/ Math/PI 10))
+                        :configuration-thumb-top-right-offset-x    (get shaping "thumbTopRightOffsetX" -15)
+                        :configuration-thumb-top-right-offset-y    (get shaping "thumbTopRightOffsetY" -10)
+                        :configuration-thumb-top-right-offset-z    (get shaping "thumbTopRightOffsetZ" 5)
+                        :configuration-thumb-top-left-tenting-x    (get-angle shaping "thumbTopLeftTentingX" (/ Math/PI 10))
+                        :configuration-thumb-top-left-tenting-y    (get-angle shaping "thumbTopLeftTentingY" (/ Math/PI -4))
+                        :configuration-thumb-top-left-tenting-z    (get-angle shaping "thumbTopLeftTentingZ" (/ Math/PI 10))
+                        :configuration-thumb-top-left-offset-x     (get shaping "thumbTopLeftOffsetX" -35)
+                        :configuration-thumb-top-left-offset-y     (get shaping "thumbTopLeftOffsetY" -16)
+                        :configuration-thumb-top-left-offset-z     (get shaping "thumbTopLeftOffsetZ" 2)
+                        :configuration-thumb-middle-left-tenting-x (get-angle shaping "thumbMiddleLeftTentingX" (/ Math/PI 10))
+                        :configuration-thumb-middle-left-tenting-y (get-angle shaping "thumbMiddleLeftTentingY" (/ Math/PI -4))
+                        :configuration-thumb-middle-left-tenting-z (get-angle shaping "thumbMiddleLeftTentingZ" (/ Math/PI 10))
+                        :configuration-thumb-middle-left-offset-x  (get shaping "thumbMiddleLeftOffsetX" -35)
+                        :configuration-thumb-middle-left-offset-y  (get shaping "thumbMiddleLeftOffsetY" -16)
+                        :configuration-thumb-middle-left-offset-z  (get shaping "thumbMiddleLeftOffsetZ" 2)
+                        :configuration-thumb-middle-right-tenting-x (get-angle shaping "thumbMiddleRightTentingX" (/ Math/PI 10))
+                        :configuration-thumb-middle-right-tenting-y (get-angle shaping "thumbMiddleRightTentingY" (/ Math/PI -4))
+                        :configuration-thumb-middle-right-tenting-z (get-angle shaping "thumbMiddleRightTentingZ" (/ Math/PI 10))
+                        :configuration-thumb-middle-right-offset-x  (get shaping "thumbMiddleRightOffsetX" -29)
+                        :configuration-thumb-middle-right-offset-y  (get shaping "thumbMiddleRightOffsetY" -41)
+                        :configuration-thumb-middle-right-offset-z  (get shaping "thumbMiddleRightOffsetZ" -13)
                         :configuration-use-hotswap?                (get form "hotswap" false)
                         :configuration-stagger?                    (get form "stagger" true)
+                        :configuration-ibnuda-edits?               (get form "ibnudaEdits" true)
+                        :configuration-testing-only-inflexible?    (get form "testingOnlyInflexible" false)
                         :configuration-stagger-index               stagger-index
                         :configuration-stagger-middle              stagger-middle
                         :configuration-stagger-ring                stagger-ring
@@ -95,7 +102,8 @@
         connector      (get body "connector")
         form           (get body "form")
         misc           (get body "misc")
-        c              {:configuration-ncols                (get keys "columns" 5)
+        c              {:configuration-lightcycle?          true
+                        :configuration-ncols                (get keys "columns" 5)
                         :configuration-use-numrow?          (get keys "numRow" false)
                         :configuration-use-lastrow?         (get keys "lastRow" false)
                         :configuration-switch-type          (keyword (get keys "switchType" "box"))
@@ -123,6 +131,7 @@
                         :configuration-manuform-offset?     (get form "manuformOffset" false)
                         :configuration-use-border?          (get form "useBorder" true)
                         :configuration-thick-wall?          (get form "thickWall" false)
+                        :configuration-ibnuda-edits?        (get form "ibnudaEdits" true)
 
                         :configuration-use-screw-inserts?   (get misc "screwInserts" false)
                         :configuration-is-right?            (get misc "rightSide" true)
@@ -130,7 +139,6 @@
                         :configuration-use-case?            (get misc "useCase" true)}
         ]
     c))
-
 
 (defn generate-manuform [c]
   (if (get c :configuration-is-plate?)
@@ -140,7 +148,6 @@
     (if (get c :configuration-is-right?)
       (dm/model-right c)
       (dm/model-left c))))
-
 
 (defn generate-lightcycle [c]
   (if (get c :configuration-is-plate?)

@@ -1,25 +1,35 @@
 (ns dactyl-generator.common
   (:refer-clojure :exclude [use import])
   (:require [scad-clj.model :refer [translate cube hull rotate cylinder union mirror extrude-linear polygon sphere difference color sphere-fn cylinder-fn project *fn*]]
-            [dactyl-generator.util :refer [mmul]]))
+            [dactyl-generator.util :refer [mmul bottom-hull-t]]))
 
 ; common parts between the two boards.
+
+(defn bottom-hull [c & p]
+  (bottom-hull-t (if (get c :configuration-testing-only-inflexible?) 10 0) p))
 
 (defn extra-width
   "extra width between two keys in a row."
   [c]
-  (let [nrows (get c :configuration-nrows 5)]
-    (if (> nrows 5) 3.5 2.5)))
-(def extra-height
+  (let [nrows (get c :configuration-nrows 5)
+        lightcycle? (get c :configuration-lightcycle?)]
+    (if lightcycle? 2 (if (> nrows 5) 3.5 2.5))))
+(defn extra-height
   "extra height between two keys in a column."
-  1.0)
+  [c]
+  (let [lightcycle? (get c :configuration-lightcycle?)]
+    (if lightcycle? 0.5 1.0)))
 
-(def keyswitch-height
+(defn keyswitch-height
   "the y dimension of an mx style keyswitch, in millimeter."
-  14.0)
-(def keyswitch-width
+  [c]
+  (if (get c :configuration-ibnuda-edits?) 14.0 14.4))
+(defn keyswitch-width
   "the x dimension of an mx style keyswitch, in millimeter."
-  14.0)
+  [c]
+  (if (get c :configuration-ibnuda-edits?) 14.0 14.4))
+
+(defn keyswitch-width-c [c] (keyswitch-width c))
 
 (def alps-width
   "the x dimension of an alps style keyswitch, in millimeter."
@@ -35,14 +45,16 @@
 (def sa-profile-key-height 12.7)
 (def choc-profile-key-height 3.5)
 
-(def plate-thickness 5)
-(def mount-width (+ keyswitch-width 3.5))
-(def mount-height (+ keyswitch-height 3.5))
+(defn plate-thickness [c] (if (get c :configuration-ibnuda-edits?) 5 4))
+
+(defn mount-extra [c] (if (get c :configuration-ibnuda-edits?) 3.5 3))
+(defn mount-width [c] (+ (keyswitch-width c) (mount-extra c)))
+(defn mount-height [c] (+ (keyswitch-height c) (mount-extra c)))
 
 (defn profile-key-height [switch-type] (case switch-type :choc choc-profile-key-height sa-profile-key-height))
 
-(defn cap-top-height [switch-type]
-  (+ plate-thickness (profile-key-height switch-type)))
+(defn cap-top-height [c switch-type]
+  (+ (plate-thickness c) (profile-key-height switch-type)))
 
 ;;;;;;;;;;;;;;;;;
 ;; placement function ;;
@@ -106,18 +118,18 @@
 (defn frow-radius
   "It computes the radius of the row's curve. It takes the value of `pi` divided
    by `alpha` to compute the said radius."
-  [alpha switch-type]
-  (+ (/ (/ (+ mount-height extra-height) 2)
+  [c alpha switch-type]
+  (+ (/ (/ (+ (mount-height c) (extra-height c)) 2)
         (Math/sin (/ alpha 2)))
-     (cap-top-height switch-type)))
+     (cap-top-height c switch-type)))
 
 (defn fcolumn-radius
   "It computes the radius of the column's curve. It takes the value of `pi` divided
    by `beta` to compute the said radius."
   [c beta switch-type]
-  (+ (/ (/ (+ mount-width (extra-width c)) 2)
+  (+ (/ (/ (+ (mount-width c) (extra-width c)) 2)
         (Math/sin (/ beta 2)))
-     (cap-top-height switch-type)))
+     (cap-top-height c switch-type)))
 
 ; when set `use-wide-pinky?`,
 ; you will get 1.5u keys for the outermost pinky keys.
@@ -160,9 +172,9 @@
                                                                  column
                                                                  row)
                                               0
-                                              (- (frow-radius alpha switch-type))])
+                                              (- (frow-radius c alpha switch-type))])
                                (rotate-x-fn  (* alpha (- centerrow row)))
-                               (translate-fn [0 0 (frow-radius alpha switch-type)])
+                               (translate-fn [0 0 (frow-radius c alpha switch-type)])
                                (translate-fn [0 0 (- (fcolumn-radius c beta switch-type))])
                                (rotate-y-fn  column-angle)
                                (translate-fn [0 0 (fcolumn-radius c beta switch-type)])
@@ -208,14 +220,14 @@
   "determines the position of the left column key position."
   [c row direction]
   (map -
-       (key-position c 0 row [(* mount-width -0.5) (* direction mount-height 0.5) 0])
+       (key-position c 0 row [(* (mount-width c) -0.5) (* direction (mount-height c) 0.5) 0])
        [left-wall-x-offset 0 left-wall-z-offset]))
 
 (defn index-key-position
   "determines the position of the left column key position."
   [c row direction]
   (map -
-       (key-position c 1 row [(* mount-width -0.5) (* direction mount-height 0.5) 0])
+       (key-position c 1 row [(* (mount-width c) -0.5) (* direction (mount-height c) 0.5) 0])
        [left-wall-x-offset 0 left-wall-z-offset]))
 
 ;;;;;;;;;;;;;;;;;
@@ -244,51 +256,54 @@
         use-hotswap?        (get c :configuration-use-hotswap?)
         is-right?           (get c :is-right?)
         plate-projection?   (get c :configuration-plate-projection? false)
-        fill-in             (translate [0 0 (/ plate-thickness 2)] (cube alps-width alps-height plate-thickness))
-        holder-thickness    1.65
+        fill-in             (translate [0 0 (/ (plate-thickness c) 2)] (cube alps-width alps-height (plate-thickness c)))
+        alps-size           (if (get c :configuration-ibnuda-edits?) 2.7 2.2)
+        alps-thickness      (if (get c :configuration-ibnuda-edits?) 2 1.5)
+        holder-thickness    (if (get c :configuration-ibnuda-edits?) 1.65 1.5)
+        mx-margin           (if (get c :configuration-ibnuda-edits?) 3.3 3)
         top-wall            (case switch-type
-                              :alps (->> (cube (+ keyswitch-width 3) 2.7 plate-thickness)
+                              :alps (->> (cube (+ (keyswitch-width-c c) 3) alps-size (plate-thickness c))
                                          (translate [0
-                                                     (+ (/ 2.7 2) (/ alps-height 2))
-                                                     (/ plate-thickness 2)]))
-                              :choc (->> (cube (+ keyswitch-width 3) holder-thickness (* plate-thickness 0.65))
+                                                     (+ (/ alps-size 2) (/ alps-height 2))
+                                                     (/ (plate-thickness c) 2)]))
+                              :choc (->> (cube (+ (keyswitch-width-c c) 3) holder-thickness (* (plate-thickness c) 0.65))
                                          (translate [0
-                                                     (+ holder-thickness (/ keyswitch-height 2))
-                                                     (* plate-thickness 0.7)]))
-                              (->> (cube (+ keyswitch-width 3.3) holder-thickness plate-thickness)
+                                                     (+ holder-thickness (/ (keyswitch-height c) 2))
+                                                     (* (plate-thickness c) 0.7)]))
+                              (->> (cube (+ (keyswitch-width-c c) mx-margin) holder-thickness (plate-thickness c))
                                    (translate [0
-                                               (+ (/ holder-thickness 2) (/ keyswitch-height 2))
-                                               (/ plate-thickness 2)])))
+                                               (+ (/ holder-thickness 2) (/ (keyswitch-height c) 2))
+                                               (/ (plate-thickness c) 2)])))
         left-wall           (case switch-type
-                              :alps (union (->> (cube 2 (+ keyswitch-height 3) plate-thickness)
-                                                (translate [(+ (/ 2 2) (/ 15.6 2))
+                              :alps (union (->> (cube alps-thickness (+ (keyswitch-height c) 3) (plate-thickness c))
+                                                (translate [(+ (/ alps-thickness 2) (/ 15.6 2))
                                                             0
-                                                            (/ plate-thickness 2)]))
-                                           (->> (cube 1.5 (+ keyswitch-height 3) 1.0)
+                                                            (/ (plate-thickness c) 2)]))
+                                           (->> (cube 1.5 (+ (keyswitch-height c) 3) 1.0)
                                                 (translate [(+ (/ 1.5 2) (/ alps-notch-width 2))
                                                             0
-                                                            (- plate-thickness
+                                                            (- (plate-thickness c)
                                                                (/ alps-notch-height 2))])))
-                              :choc (->> (cube holder-thickness (+ keyswitch-height 3.3) (* plate-thickness 0.65))
-                                         (translate [(+ (/ holder-thickness 2) (/ keyswitch-width 2))
+                              :choc (->> (cube holder-thickness (+ (keyswitch-height c) 3.3) (* (plate-thickness c) 0.65))
+                                         (translate [(+ (/ holder-thickness 2) (/ (keyswitch-width-c c) 2))
                                                      0
-                                                     (* plate-thickness 0.7)]))
-                              (->> (cube holder-thickness (+ keyswitch-height 3.3) plate-thickness)
-                                   (translate [(+ (/ holder-thickness 2) (/ keyswitch-width 2))
+                                                     (* (plate-thickness c) 0.7)]))
+                              (->> (cube holder-thickness (+ (keyswitch-height c) mx-margin) (plate-thickness c))
+                                   (translate [(+ (/ holder-thickness 2) (/ (keyswitch-width-c c) 2))
                                                0
-                                               (/ plate-thickness 2)])))
+                                               (/ (plate-thickness c) 2)])))
         side-nub            (->> (binding [*fn* 30] (cylinder 1 2.75))
                                  (rotate (/ Math/PI 2) [1 0 0])
-                                 (translate [(+ (/ keyswitch-width 2)) 0 (+ 1 nub-height)])
-                                 (hull (->> (cube 1.5 2.75 (- plate-thickness nub-height))
-                                            (translate [(+ (/ 1.5 2) (/ keyswitch-width 2))
+                                 (translate [(+ (/ (keyswitch-width-c c) 2)) 0 (+ 1 nub-height)])
+                                 (hull (->> (cube 1.5 2.75 (- (plate-thickness c) nub-height))
+                                            (translate [(+ (/ 1.5 2) (/ (keyswitch-width-c c) 2))
                                                         0
-                                                        (/ (+ plate-thickness nub-height) 2)]))))
+                                                        (/ (+ (plate-thickness c) nub-height) 2)]))))
         ; the hole's wall.
-        kailh-cutout (->> (cube (/ keyswitch-width 3) 1.6 (+ plate-thickness 1.8))
+        kailh-cutout (->> (cube (/ (keyswitch-width-c c) 3) 1.6 (+ (plate-thickness c) 1.8))
                           (translate [0
-                                      (+ (/ 1.5 2) (+ (/ keyswitch-height 2)))
-                                      (/ plate-thickness)]))
+                                      (+ (/ 1.5 2) (+ (/ (keyswitch-height c) 2)))
+                                      (/ (plate-thickness c))]))
         plate-half          (case switch-type
                               :kailh (union (difference top-wall kailh-cutout) left-wall)
                               (union top-wall
@@ -296,8 +311,8 @@
                                      (if create-side-nub? (binding [*fn* 100] side-nub))))
         ; the bottom of the hole.
         swap-holder-z-offset (if use-choc? 1.5 -1.5)
-        swap-holder         (->> (cube (+ keyswitch-width 3) (/ keyswitch-height 2) 3)
-                                 (translate [0 (/ (+ keyswitch-height 3) 4) swap-holder-z-offset]))
+        swap-holder         (->> (cube (+ (keyswitch-width-c c) 3) (/ (keyswitch-height c) 2) 3)
+                                 (translate [0 (/ (+ (keyswitch-height c) 3) 4) swap-holder-z-offset]))
         ; for the main axis
         main-axis-hole      (->> (cylinder-fn (/ 4.0 2) 10 12))
         plus-hole           (->> (cylinder-fn (/ 3.3 2) 10 8)
@@ -348,7 +363,7 @@
 
 (def sa-length 18.25)
 (def sa-double-length 37.5)
-(def sa-cap
+(defn sa-cap [c]
   {1   (let [bl2     (/ 18.5 2)
              m       (/ 17 2)
              key-cap (hull (->> (polygon [[bl2 bl2] [bl2 (- bl2)] [(- bl2) (- bl2)] [(- bl2) bl2]])
@@ -367,7 +382,7 @@
                                                  :convexity 0})
                                 (translate [0 0 12])))]
          (->> key-cap
-              (translate [0 0 (+ 5 plate-thickness)])
+              (translate [0 0 (+ 5 (plate-thickness c))])
               (color [(/ 220 255) (/ 163 255) (/ 163 255) 1])))
    2   (let [bl2     (/ sa-double-length 2)
              bw2     (/ 18.25 2)
@@ -382,7 +397,7 @@
                                                  :convexity 0})
                                 (translate [0 0 12])))]
          (->> key-cap
-              (translate [0 0 (+ 5 plate-thickness)])
+              (translate [0 0 (+ 5 (plate-thickness c))])
               (color [(/ 127 255) (/ 159 255) (/ 127 255) 1])))
    1.5 (let [bl2     (/ 18.25 2)
              bw2     (/ 28 2)
@@ -397,39 +412,39 @@
                                                  :convexity 0})
                                 (translate [0 0 12])))]
          (->> key-cap
-              (translate [0 0 (+ 5 plate-thickness)])
+              (translate [0 0 (+ 5 (plate-thickness c))])
               (color [(/ 240 255) (/ 223 255) (/ 175 255) 1])))})
 
-(def web-thickness 7)
+;; (def web-thickness 7)
 (def post-size 0.1)
 ;; TODO remove the constants once lightcycle has been converted
-(def web-post
+;; (def web-post
+  ;; (->> (cube post-size post-size web-thickness)
+       ;; (translate [0 0 (+ (/ web-thickness -2)
+                          ;; (plate-thickness c))])))
+(defn web-post [c web-thickness]
   (->> (cube post-size post-size web-thickness)
        (translate [0 0 (+ (/ web-thickness -2)
-                          plate-thickness)])))
-(defn web-post [web-thickness]
-  (->> (cube post-size post-size web-thickness)
-       (translate [0 0 (+ (/ web-thickness -2)
-                          plate-thickness)])))
+                          (plate-thickness c))])))
 
 (def post-adj (/ post-size 2))
 
 ;; TODO remove the constants once lightcycle has been converted
-;; (def web-post-tr (translate [(- (/ mount-width 2) post-adj) (- (/ mount-height 2) post-adj) 0] web-post))
-;; (def web-post-tl (translate [(+ (/ mount-width -2) post-adj) (- (/ mount-height 2) post-adj) 0] web-post))
-;; (def web-post-bl (translate [(+ (/ mount-width -2) post-adj) (+ (/ mount-height -2) post-adj) 0] web-post))
-;; (def web-post-br (translate [(- (/ mount-width 2) post-adj) (+ (/ mount-height -2) post-adj) 0] web-post))
-(defn web-post-tr [web-thickness] (translate [(- (/ mount-width 2) post-adj) (- (/ mount-height 2) post-adj) 0] (web-post web-thickness)))
-(defn web-post-tl [web-thickness] (translate [(+ (/ mount-width -2) post-adj) (- (/ mount-height 2) post-adj) 0] (web-post web-thickness)))
-(defn web-post-bl [web-thickness] (translate [(+ (/ mount-width -2) post-adj) (+ (/ mount-height -2) post-adj) 0] (web-post web-thickness)))
-(defn web-post-br [web-thickness] (translate [(- (/ mount-width 2) post-adj) (+ (/ mount-height -2) post-adj) 0] (web-post web-thickness)))
+;; (def web-post-tr (translate [(- (/ (mount-width c) 2) post-adj) (- (/ (mount-height c) 2) post-adj) 0] web-post))
+;; (def web-post-tl (translate [(+ (/ (mount-width c) -2) post-adj) (- (/ (mount-height c) 2) post-adj) 0] web-post))
+;; (def web-post-bl (translate [(+ (/ (mount-width c) -2) post-adj) (+ (/ (mount-height c) -2) post-adj) 0] web-post))
+;; (def web-post-br (translate [(- (/ (mount-width c) 2) post-adj) (+ (/ (mount-height c) -2) post-adj) 0] web-post))
+(defn web-post-tr [c web-thickness] (translate [(- (/ (mount-width c) 2) post-adj) (- (/ (mount-height c) 2) post-adj) 0] (web-post c web-thickness)))
+(defn web-post-tl [c web-thickness] (translate [(+ (/ (mount-width c) -2) post-adj) (- (/ (mount-height c) 2) post-adj) 0] (web-post c web-thickness)))
+(defn web-post-bl [c web-thickness] (translate [(+ (/ (mount-width c) -2) post-adj) (+ (/ (mount-height c) -2) post-adj) 0] (web-post c web-thickness)))
+(defn web-post-br [c web-thickness] (translate [(- (/ (mount-width c) 2) post-adj) (+ (/ (mount-height c) -2) post-adj) 0] (web-post c web-thickness)))
 
 ; length of the first downward-sloping part of the wall (negative)
 (def wall-z-offset -15)
 ; offset in the x and/or y direction for the first downward-sloping part of the wall (negative)
 (def wall-xy-offset 5)
 ; wall thickness parameter; originally 5
-(def wall-thickness 3)
+;; (def wall-thickness 3)
 
 ;; TODO remove those functions once lightcycle has been integrated
 ;; (defn wall-locate1 [dx dy]
@@ -529,11 +544,11 @@
         shift-down  (and (not (or shift-right shift-left)) (>= row lastrow))
         wall-thickness (get c :configuration-wall-thickness 5)
         position    (if shift-up
-                      (key-position c column row (map + (wall-locate2 wall-thickness 0  1) [0 (/ mount-height 2) 0]))
+                      (key-position c column row (map + (wall-locate2 wall-thickness 0  1) [0 (/ (mount-height c) 2) 0]))
                       (if shift-down
-                        (key-position c column row (map - (wall-locate2 wall-thickness 0 -1) [0 (/ mount-height 2) 0]))
+                        (key-position c column row (map - (wall-locate2 wall-thickness 0 -1) [0 (/ (mount-height c) 2) 0]))
                         (if shift-left
                           (map + (left-key-position c row 0) (wall-locate3 wall-thickness -1 0))
-                          (key-position c column row (map + (wall-locate2 wall-thickness 1  0) [(/ mount-width 2) 0 0])))))]
+                          (key-position c column row (map + (wall-locate2 wall-thickness 1  0) [(/ (mount-width c) 2) 0 0])))))]
     (->> (screw-insert-shape bottom-radius top-radius height)
          (translate [(first position) (second position) (/ height 2)]))))

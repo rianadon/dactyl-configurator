@@ -5,13 +5,13 @@
 (defn deg2rad [degrees]
   (* (/ degrees 180) Math/PI))
 
-(defn bottom [height p]
+(defn bottom [height p transl]
   (->> (project p)
        (extrude-linear {:height height :twist 0 :convexity 0})
-       (translate [0 0 (- (/ height 2) 0)])))
+       (translate [0 0 (- (/ height 2) transl)])))
 
-(defn bottom-hull [& p]
-  (hull p (bottom 0.001 p)))
+(defn bottom-hull-t [transl & p]
+  (hull p (bottom 0.001 p transl)))
 
 ;; takes a list of 'location's,
 ;; partitions them into triad,
