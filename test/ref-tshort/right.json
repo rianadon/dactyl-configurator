@@ -37,6 +37,8 @@
         "shaping": {
             "stagger": true,
             "customThumbCluster": true,
+            "extraWidth": 2.5,
+            "extraHeight": 1,
             "staggerIndexY": 0.0,
             "staggerIndexZ": 0.0,
             "staggerMiddleY": 2.82,
