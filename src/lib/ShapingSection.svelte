@@ -11,10 +11,10 @@
  export let states: object;
  export let schema: FieldSchema;
 
- const ML_THUMBS = ['six', 'five', 'four', 'three', 'three-mini'];
+ const ML_THUMBS = ['six', 'four', 'three', 'three-mini'];
  const MR_THUMBS = ['six', 'five', 'four'];
  const BL_THUMBS = ['six', 'five'];
- const BR_THUMBS = ['six'];
+ const BR_THUMBS = ['six', 'five'];
 
  function loadPreset(preset: object) {
      states = { ...states, ...preset };
