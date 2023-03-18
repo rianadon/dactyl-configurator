@@ -4,6 +4,7 @@
  import Field from './Field.svelte'
  import ShapingTable from './ShapingTable.svelte'
  import presetDefault from '../assets/presets/manuthumb.default.json'
+ import presetFive from '../assets/presets/manuthumb.five.json'
  import presetWacky from '../assets/presets/manuthumb.wacky.json'
  import manuform from '../assets/manuform.json'
 
@@ -32,6 +33,7 @@
   <div class="mb-2 mr-4">Shaping Preset</div>
   <div>
     <button class="preset" on:click={() => loadPreset(presetDefault)}>Default</button>
+    <button class="preset" on:click={() => loadPreset(presetFive)}>5-Key</button>
     <button class="preset" on:click={() => loadPreset(presetWacky)}>Wacky?</button>
   </div>
 </div>
