@@ -43,7 +43,7 @@ message Manuform {
     optional bool external = 1 [(name) = "Use External Holder"];
     optional string type = 2 [(name) = "USB Hole",
                               (dropdown) = { value: "rj9", name: "RJ9" },
-                              (dropdown) = { value: "ttrs", name: "TTRS" },
+                              (dropdown) = { value: "trrs", name: "TRRS" },
                               (dropdown) = { value: "usb", name: "USB only" },
                               (dropdown) = { value: "none", name: "None" }];
     optional bool micro_usb = 3 [(name) = "Micro USB Hole"];
