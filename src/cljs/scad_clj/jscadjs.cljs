@@ -104,8 +104,8 @@
                      (when fn { "fn" fn })
                      (when fs { "fs" fs }))]
     (if r
-      ((g/get primitives "cylinder") (merge { "height" h "radius" r } fargs))
-      ((g/get primitives "cylinderElliptic") (merge { "height" h "startRadius" [r1 r1] "endRadius" [r2 r2] } fargs)))))
+      ((g/get primitives "cylinder") (clj->js (merge { "height" h "radius" r } fargs)))
+      ((g/get primitives "cylinderElliptic") (clj->js (merge { "height" h "startRadius" [r1 r1] "endRadius" [r2 r2] } fargs))))))
 
 ;; (defmethod write-expr :polyhedron [modeling [form {:keys [points faces convexity]}]]
   ;; `(~@(indent modeling) "polyhedron({"
