@@ -211,7 +211,7 @@
           <p class="mb-2">The set of options you've chosen cannot be previewed.</p>
           <p class="mb-2">Even though there is no preview, you can still download the STL or the OpenSCAD model.</p>
           <p class="mb-2">Here's some technical information:</p>
-          <p class="text-sm"><code>{csgError}<br>{csgError.stack.split('\n').slice(0, 5).join('\n')}</code></p>
+          <p class="text-sm"><code>{csgError.name}: {csgError.message}<br>{csgError.stack.split('\n').slice(0, 5).join('\n')}</code></p>
         </div>
       {/if}
     </div>

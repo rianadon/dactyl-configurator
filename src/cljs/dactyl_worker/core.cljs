@@ -41,6 +41,11 @@
     ((g/get openscad "callMain") (array "/source.scad" "-o" "out.stl" ))
     ((g/get fs "readFile") "/out.stl")))
 
+(defn err-to-obj [e]
+  #js {"name" (. e -name)
+       "message" (. e -message)
+       "stack" (. e -stack)})
+
 (defn on-message [msg]
   (let [ type (.. msg -data -type)
          data (.. msg -data -data)]
@@ -49,7 +54,7 @@
       "scripts" (load-scripts data)
       "wasm" (load-wasm data)
       "csg" (try (message "csg" (generate-csg data))
-                 (catch :default e (message "csgerror" e)))
+                 (catch :default e (message "csgerror" (err-to-obj e))))
       "scad" (message "scad" (generate-scad data))
       "stl" (message "stl" (render data)))))
 
