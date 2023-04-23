@@ -3,6 +3,7 @@
  import Github from 'svelte-material-icons/Github.svelte'
  import Book from 'svelte-material-icons/BookOpenVariant.svelte'
  import Info from 'svelte-material-icons/Information.svelte'
+ import Shimmer from 'svelte-material-icons/Shimmer.svelte'
  import Popover from 'svelte-easy-popover'
  import { estimateFilament, fromCSG } from './lib/csg'
  import { exampleGeometry } from './lib/example'
@@ -19,6 +20,7 @@
  import model from './assets/model.stl?url'
  import Field from './lib/Field.svelte';
  import RenderDialog from './lib/RenderDialog.svelte';
+ import SupportDialog from './lib/SupportDialog.svelte';
  import Footer from './lib/Footer.svelte';
  import ShapingSection from './lib/ShapingSection.svelte';
  import { serialize, deserialize } from './lib/serialize';
@@ -45,6 +47,7 @@
  let generatingCSG = false;
  let generatingSCAD = false;
  let generatingSTL = false;
+ let sponsorOpen = false;
 
  exampleGeometry().then(g => {
      // Load the example gemoetry if nothing has been rendered yet
@@ -139,6 +142,9 @@
 
 <header class="px-8 pb-8 pt-12 flex items-center mb-4">
   <h1 class="dark:text-slate-100 text-4xl font-semibold flex-1">Dactyl Keyboard Configurator</h1>
+  <button class="flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow" on:click={() => sponsorOpen = true}>
+    <Shimmer size="24" class="text-yellow-500 dark:text-yellow-300" />Support My Work
+  </button>
   <!--<a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/docs">
     <Book size="2em" />
   </a>
@@ -185,7 +191,7 @@
   </div>
   <div class="flex-1">
     {#if state.keyboard == "lightcycle"}
-      <div class="border border-2 border-yellow-400 py-2 px-4 m-2 rounded bg-white dark:bg-gray-900">
+      <div class="border-2 border-yellow-400 py-2 px-4 m-2 rounded bg-white dark:bg-gray-900">
         Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
       </div>
     {/if}
@@ -220,6 +226,9 @@
 <footer class="px-8 pb-8 pt-16">
   <Footer></Footer>
 </footer>
+{#if sponsorOpen}
+  <SupportDialog on:close={() => sponsorOpen =  false} />
+{/if}
 {#if generatingSCAD}
   <RenderDialog>
     This may take a few seconds.
