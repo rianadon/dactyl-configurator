@@ -140,9 +140,9 @@
  }
 </script>
 
-<header class="px-8 pb-8 pt-12 flex items-center mb-4">
+<header class="px-8 pb-8 pt-12 sm:flex items-center mb-4">
   <h1 class="dark:text-slate-100 text-4xl font-semibold flex-1">Dactyl Keyboard Configurator</h1>
-  <button class="flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow" on:click={() => sponsorOpen = true}>
+  <button class="flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow mt-6 sm:mt-0 sm:ml-2" on:click={() => sponsorOpen = true}>
     <Shimmer size="24" class="text-yellow-500 dark:text-yellow-300" />Support My Work
   </button>
   <!--<a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/docs">
