@@ -18,7 +18,7 @@ message Manuform {
                                   (dropdown) = { value: "two", name: "Two (Default Dactyl Manuform)" },
                                   (dropdown) = { value: "zero", name: "No Last Row" },
                                   (dropdown) = { value: "full", name: "Use All Keys" }];
-    optional string switch_type = 5 [(name) = "Key Hole",
+    optional string switch_type = 5 [(name) = "Key Hole", (help) = "Use MX to generate nubs to help hold in the switches, or MX snap-in for larger nubs.",
                                      (dropdown) = { value: "box", name: "Box and MX" },
                                      (dropdown) = { value: "mx", name: "MX" },
                                      (dropdown) = { value: "mx-snap-in", name: "MX snap-in (one way)" },
@@ -29,7 +29,7 @@ message Manuform {
                                       (dropdown) = { value: "normie", name: "Normal" },
                                       (dropdown) = { value: "outie", name: "Use inner column" },
                                       (dropdown) = { value: "innie", name: "Without" }];
-    optional bool hide_last_pinky = 7 [(name) = "Hide Bottom Pinky?", (help) = "See Kinesis Advantage's Layout"];
+    optional bool hide_last_pinky = 7 [(name) = "Hide Bottom Pinky?", (help) = "Make an empty key hole like the Kinesis Advantage's layout"];
   }
   message Curve {
     optional sint32 alpha = 1 [(angle) = true, (name) = "Column's Curvature"];
@@ -50,7 +50,7 @@ message Manuform {
   }
   message Form {
     optional float height_offset = 10 [(min) = 4, (max) = 50, (name) = "Height Offset"];
-    optional bool hotswap = 3 [(name) = "Hotswap Socket", (help) = "Use the Kailh (Dongguan Kaihua) Hot Swap Sockets"];
+    optional bool hotswap = 3 [(name) = "Hotswap Socket", (help) = "Directly attach Kailh (Dongguan Kaihua) hot swap sockets (but I recommend using PCBs instead)"];
     optional bool screw_inserts = 4 [(name) = "Screw Inserts"];
     optional float web_thickness = 11 [(name) = "Web Thickness", (help) = "Top Part of Keyboard Around Keyholes"];
     optional float wall_thickness = 12 [(name) = "Wall Thickness", (help) = "Thickness Around the Keyboard"];
