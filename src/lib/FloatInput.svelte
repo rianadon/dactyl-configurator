@@ -1,7 +1,7 @@
 <script lang="ts">
  export let value: number;
  export let small = false;
- let clazz;
+ let clazz = '';
 
  export { clazz as class };
 

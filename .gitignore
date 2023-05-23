@@ -1,5 +1,6 @@
 # Clojure
 target
+.shadow-cljs
 
 # Logs
 logs

@@ -1,5 +1,5 @@
 import test from 'ava';
-import dactyl from '../target/dactyl_node.cjs';
+import * as dactyl from '../target/dactyl.js';
 import { readFile, writeFile } from 'fs/promises';
 
 function dedent(str) {

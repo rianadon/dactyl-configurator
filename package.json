@@ -18,6 +18,7 @@
     "autoprefixer": "^10.4.13",
     "ava": "^5.2.0",
     "postcss": "^8.4.21",
+    "shadow-cljs": "^2.23.3",
     "svelte": "^3.55.1",
     "svelte-check": "^2.10.3",
     "tailwindcss": "^3.2.7",
@@ -26,8 +27,9 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
-    "@jscad/modeling": "^2.11.0",
     "@jscad/regl-renderer": "^2.6.5",
+    "manifold-3d": "^2.1.0",
+    "quickhull3d": "^2.1.0",
     "svelte-cubed": "^0.2.1",
     "svelte-easy-popover": "^1.0.0",
     "svelte-material-icons": "^3.0.4",

@@ -52,9 +52,7 @@
      let dx = size.z / 2 + Math.abs( size.x / 2 / Math.tan( fovh / 2 ) );
      let dy = size.z / 2 + Math.abs( size.y / 2 / Math.tan( fov / 2 ) );
      if (camera) {
-         console.log(aspect, dx, dy);
          camera.position.normalize();
-         console.log(camera.position);
          camera.position.multiplyScalar(Math.max(dx, dy) * 1.2);
          camera.updateProjectionMatrix();
          root.invalidate();

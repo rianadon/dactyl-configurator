@@ -1727,14 +1727,15 @@
                              (translate [0 0 -2] (screw-insert-screw-holes screw-placement c))
                              ())
         bot                (cut (translate [0 0 -0.1] (union (case-walls c) screw-outers)))
-        inner-thing        (difference (translate [0 0 -0.1] (project (union (extrude-linear {:height 5
-                                                                                              ;; TODO Figure out how to emulate this
-                                                                                              ;; :scale  0.1
-                                                                                              :center true} bot)
-                                                                             (cube 50 50 5))))
+        inner-thing        (difference (union (extrude-linear {:height 5
+                                                               ;; TODO Figure out how to emulate this
+                                                               ;; :scale  0.1
+                                                               :center true} bot)
+                                              (cube 50 50 5))
                                        screw-inners)]
-    (difference (extrude-linear {:height 3} inner-thing)
-                screw-inners)))
+    ;; (difference (translate [0 0 -0.1] (extrude-linear {:height 3} inner-thing))
+    ;;             screw-inners)))
+    (difference (extrude-linear {:height 3} bot) screw-inners)))
 
 (defn plate-left [c]
   (mirror [-1 0 0] (plate-right c)))

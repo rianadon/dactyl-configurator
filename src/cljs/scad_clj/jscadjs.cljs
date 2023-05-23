@@ -57,7 +57,6 @@
    (clj->js { "size" [x y] })))
 
 (defmethod write-expr :polygon [modeling [form {:keys [points paths convexity]}]]
-  (println paths)
   ((g/get (g/get modeling "primitives") "polygon")
    (clj->js (merge
              (when points { "points" points })
@@ -135,14 +134,15 @@
 
 (defmethod write-expr :rotatev [modeling [form [a [x y z]] & block]]
   (let [transforms (g/get modeling "transforms")
-        mat4 (g/get (g/get modeling "maths") "mat4")
-        inside (write-block modeling block)
-        matrix ((g/get mat4 "fromRotation") ((g/get mat4 "create")) a [x y z])]
-   (match [x y z]
-     [1 0 0] ((g/get transforms "rotateX") a inside)
-     [0 1 0] ((g/get transforms "rotateY") a inside)
-     [0 0 1] ((g/get transforms "rotateZ") a inside)
-     :else   ((g/get transforms "transform") matrix inside))))
+        inside (write-block modeling block)]
+    (match [x y z]
+           [1 0 0] ((g/get transforms "rotateX") a inside)
+           [0 1 0] ((g/get transforms "rotateY") a inside)
+           [0 0 1] ((g/get transforms "rotateZ") a inside)
+           :else   (let [mat4 (g/get (g/get modeling "maths") "mat4")
+                         fromRotation (g/get mat4 "fromRotation")
+                         matrix (fromRotation ((g/get mat4 "create")) a (array x y z))]
+                     ((g/get transforms "transform") matrix inside)))))
 
 (defmethod write-expr :rotatec [modeling [form [x y z] & block]]
   ((g/get (g/get modeling "transforms") "rotate")

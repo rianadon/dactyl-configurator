@@ -7,17 +7,12 @@
  import Popover from 'svelte-easy-popover'
  import { estimateFilament, fromCSG } from './lib/csg'
  import { exampleGeometry } from './lib/example'
-
- import workerUrl from '../target/dactyl_webworker.js?url'
- import modelingUrl from '../node_modules/@jscad/modeling/dist/jscad-modeling.min.js?url'
- import scadJSUrl from './assets/openscad.wasm.js?url'
- import scadWasmUrl from './assets/openscad.wasm?url'
+ import DactylWorker from './worker?worker'
 
  import manuform from './assets/manuform.json'
  import lightcycle from './assets/lightcycle.json'
  import type { Schema } from './lib/schema'
  import { ManuformSchema, LightcycleSchema } from './lib/schema'
- import model from './assets/model.stl?url'
  import Field from './lib/Field.svelte';
  import RenderDialog from './lib/RenderDialog.svelte';
  import SupportDialog from './lib/SupportDialog.svelte';
@@ -30,9 +25,6 @@
  import presetOriginal from './assets/presets/manuform.tshort.json'
  import presetCorne from './assets/presets/manuform.corne.json'
  import presetSmallest from './assets/presets/manuform.smallest.json'
-
- let scadUrl: string;
- let stlUrl: string = model;
 
  let geometries = [];
  let filament;
@@ -47,6 +39,8 @@
  let generatingCSG = false;
  let generatingSCAD = false;
  let generatingSTL = false;
+ let generatingSCADSTL = false;
+ let stlDialogOpen = false;
  let sponsorOpen = false;
 
  exampleGeometry().then(g => {
@@ -65,7 +59,7 @@
  $: schema = (state.keyboard == "manuform" ? ManuformSchema : LightcycleSchema);
  $: defaults = (state.keyboard == "manuform" ? manuform : lightcycle);
 
- function loadPreset(preset: object) {
+ function loadPreset(preset: any) {
      const defaults = preset.keyboard == "manuform" ? manuform : lightcycle;
      state = JSON.parse(JSON.stringify({
          keyboard: preset.keyboard,
@@ -90,8 +84,14 @@
 
  function downloadSTL() {
      generatingSTL = true;
+     stlDialogOpen = true;
+     myWorker.postMessage({type: "stl", data: state });
+ }
+
+ function downloadSCADSTL() {
+     generatingSCADSTL = true;
      logs = ['Loading OpenSCAD...']
-     myWorker.postMessage({type: "wasm", data: [scadJSUrl, scadWasmUrl]})
+     myWorker.postMessage({type: "scadstl", data: state });
  }
 
  function process(settings: typeof manuform) {
@@ -100,20 +100,15 @@
      csgError = undefined;
      logs = [];
      if (myWorker) myWorker.terminate();
-     myWorker = new Worker(workerUrl);
-     myWorker.postMessage({ type: "scripts", data: modelingUrl });
+     myWorker = new DactylWorker()
      myWorker.onmessage = (e) => {
          console.log('Message received from worker', e.data);
          if (e.data.type == 'scriptsinit') {
-             // Now that the worker has finished loading OpenJSCAD, generate the preview.
+             // Now that the worker has finished loading Manifold, generate the preview.
              myWorker.postMessage({ type: "csg", data: settings})
          } else if (e.data.type == 'csgerror') {
              // There was an error generating the preview. Show it!
-             console.error(e.data.data);
              csgError = e.data.data;
-         } else if (e.data.type == 'wasminit') {
-             // Now that the worker has finished loading OpenSCAD, render the STL.
-             myWorker.postMessage({type: "stl", data: settings });
          } else if (e.data.type == 'scad') {
              // SCAD generation finished. Download it!
              generatingSCAD = false;
@@ -122,6 +117,7 @@
          } else if (e.data.type == 'stl') {
              // STL generation finished. Download it!
              generatingSTL = false;
+             generatingSCADSTL = false;
              const blob = new Blob([e.data.data], { type: "application/octet-stream" })
              download(blob, "model.stl")
          } else if (e.data.type == 'csg') {
@@ -130,10 +126,7 @@
              geometries = fromCSG(e.data.data);
              filament = estimateFilament(e.data.data[0]?.volume);
          } else if (e.data.type == 'log') {
-             if (e.data.data == 'Could not initialize localization.') {
-                 // Replace the confusing localization message with something nicer.
-                 e.data.data = 'Starting render...'
-             }
+             // Logging from OpenSACD
              logs = [...logs, e.data.data]
          }
      }
@@ -196,7 +189,7 @@
       </div>
     {/if}
     <div class="viewer relative xs:sticky h-[100vh] top-0">
-      <Viewer geometries={geometries} filament={filament} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
+      <Viewer geometries={geometries} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
       {#if filament}
         <div class="absolute bottom-0 right-0 text-right mb-2">
           {filament.length.toFixed(1)}m <span class="text-gray-600 dark:text-gray-100">of filament</span>
@@ -217,7 +210,7 @@
           <p class="mb-2">The set of options you've chosen cannot be previewed.</p>
           <p class="mb-2">Even though there is no preview, you can still download the STL or the OpenSCAD model.</p>
           <p class="mb-2">Here's some technical information:</p>
-          <p class="text-sm"><code>{csgError.name}: {csgError.message}<br>{csgError.stack.split('\n').slice(0, 5).join('\n')}</code></p>
+          <p class="text-sm whitespace-pre-line"><code>{csgError.name}: {csgError.message}<br>{csgError.stack.split('\n').slice(0, 8).join('\n')}</code></p>
         </div>
       {/if}
     </div>
@@ -234,10 +227,24 @@
     This may take a few seconds.
   </RenderDialog>
 {/if}
-{#if generatingSTL}
-  <RenderDialog logs={logs}>
-    <p>Your model is being generated with OpenSCAD renderer.</p>
-    <p>This takes a few minutes. I suggest you stop staring at this dialog box.</p>
+{#if stlDialogOpen}
+  <RenderDialog logs={logs} closeable={!generatingSCADSTL} on:close={() => stlDialogOpen= false} generating={generatingSTL}>
+    <p>Your model should download in a few seconds.</p>
+    
+    <div class="bg-gray-100 dark:bg-gray-900 px-4 py-2 my-4 mx-2 rounded text-left">
+      <p class="font-bold mb-1">A few seconds? Why so fast?</p>
+      <p>Model generation uses <a class="underline text-teal-500" href="github.com/elalish/Manifold">Manifold</a>, an extremely fast geometry kernel.</p>
+      <p>Recent versions of OpenSCAD use this kernel too for faster renders.</p>
+    </div>
+
+    <p class="mb-1">If you think the STL is wrong, you can regenerate it with OpenSCAD.</p>
+    <p class="mb-1">Click <button class="underline text-teal-500" on:click={downloadSCADSTL}>here</button> to generate an STL using OpenSCAD through the browser.</p>
+    <p class="mb-1 text-gray-500 dark:text-gray-400">→ It's not worth it. This gives the same results but takes minutes. ←</p>
+    {#if logs.length}
+      <hr class="my-2 text-gray-500 dark:border-gray-400">
+      <p>Your model is being generated with OpenSCAD renderer.</p>
+      <p>This takes a few minutes. I suggest you stop staring at this dialog box.</p>
+    {/if}
   </RenderDialog>
 {/if}
 

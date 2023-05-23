@@ -1,0 +1,13 @@
+;; shadow-cljs configuration
+{:source-paths ["src/cljs"]
+
+  :dependencies [[org.clojure/core.match "1.0.1"]]
+
+  :builds {:dactyl {:target :esm
+                    :output-dir "target"
+                      ;; :source-map "target/dactyl_webworker.js.map"
+                    :modules {:dactyl {:exports {
+                      generate dactyl-node.web/generate-js
+                      generateManifold dactyl-node.web/generate-manifold
+                      generateSCAD dactyl-node.web/generate-scad
+                    }}}}}}
