@@ -9,7 +9,6 @@
 
 (def generate (comp hd/generate js->clj))
 (def generate-scad (comp scad/write-scad generate))
-(def generate-jscad (comp jscad/write-scad generate))
 
 (defn generate-js [config modeling]
   (clj->js (jscadjs/write-scad modeling (generate config))))

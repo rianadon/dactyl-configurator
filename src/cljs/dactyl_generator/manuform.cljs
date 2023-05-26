@@ -1473,7 +1473,7 @@
     (key-position c 0.2 0 (map - (wall-locate2 wall-thickness 0 y-addition) [0 (/ (mount-height c) 2) 0]))))
 
 (defn trrs-usb-holder-position [c]
-  (map + [17 12 0] [(first (trrs-usb-holder-ref c)) (second (trrs-usb-holder-ref c)) 2]))
+  (map + [17 18 0] [(first (trrs-usb-holder-ref c)) (second (trrs-usb-holder-ref c)) 2]))
 (def trrs-usb-holder-cube
   (cube 17 12 2))
 (defn trrs-usb-holder-space [c]
@@ -1529,7 +1529,8 @@
        (translate [(- (first (pro-micro-position c)) (/ pro-micro-wall-thickness 2))
                    (- (second (pro-micro-position c)) (/ pro-micro-wall-thickness 2))
                    (last (pro-micro-position c))])))
-(defn pro-micro-holder [c]
+(defn pro-micro-holder [c] ())
+(defn pro-micro-holder-unused [c]
     (difference
      (->> (cube (first pro-micro-holder-size)
                 (second pro-micro-holder-size)

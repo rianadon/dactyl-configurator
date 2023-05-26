@@ -1,6 +1,8 @@
 import type { Manifold, ManifoldStatic, Mat4, Mesh, Polygons, Vec2, Vec3 } from 'manifold-3d'
 import quickhull from 'quickhull3d'
-import { Matrix4, Vector2, Vector3 } from 'three'
+import { Matrix4 } from 'three/src/math/Matrix4'
+import { Vector3 } from 'three/src/math/Vector3'
+import { Vector2 } from 'three/src/math/Vector2'
 
 function d(m: Manifold|Manifold[]): Manifold {
     if (Array.isArray(m)) {
@@ -224,3 +226,39 @@ export const createModeling = (manifold: ManifoldStatic) => ({
 })
 
 export type Modeling = ReturnType<typeof createModeling>
+
+export function serializeMesh(m: Manifold) {
+    const mesh = m.getMesh()
+
+    const cb = new Vector3();
+    const ab = new Vector3();
+    const normal = []
+
+    const pos = []
+    for (let i = 0; i < mesh.vertProperties.length; i += 3) {
+        pos.push(new Vector3().fromArray(mesh.vertProperties, i))
+    }
+
+    const normals = new Float32Array(mesh.triVerts.length*3)
+    const vertices = new Float32Array(mesh.triVerts.length*3)
+
+    let i = 0;
+    for (let tri = 0; tri < mesh.triVerts.length; tri += 3) {
+        const vA = pos[mesh.triVerts[tri+0]],
+              vB = pos[mesh.triVerts[tri+1]],
+              vC = pos[mesh.triVerts[tri+2]];
+        cb.subVectors(vC, vB);
+        ab.subVectors(vA, vB);
+        cb.cross(ab).normalize().toArray(normal)
+
+        vertices.set(vA.toArray(), i)
+        vertices.set(vB.toArray(), i+3)
+        vertices.set(vC.toArray(), i+6)
+        normals.set(normal, i)
+        normals.set(normal, i+3)
+        normals.set(normal, i+6)
+        i += 9;
+    }
+
+    return { vertices, normals }
+}

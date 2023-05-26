@@ -2,7 +2,7 @@ import type { ManifoldStatic, Mesh } from "manifold-3d"
 import * as Dactyl from '../../target/dactyl.js'
 import Module from '../assets/manifold'
 import manifoldWasmUrl from '../assets/manifold.wasm?url'
-import { createModeling, type Modeling } from "./modeling.js"
+import { createModeling, serializeMesh, type Modeling } from "./modeling.js"
 import scadWasmUrl from '../assets/openscad.wasm?url'
 import stlExport from "./STLExporter.js"
 
@@ -34,7 +34,7 @@ function main(manifold: ManifoldStatic) {
 
 function generateCSG(config: any, modeling: Modeling) {
     try {
-        message('csg', Dactyl.generate(config, modeling))
+        message('csg', serializeMesh(Dactyl.generateManifold(config, modeling)))
     } catch (e) {
         console.error(e)
         message("csgerror", serializeErr(e))
@@ -47,7 +47,7 @@ function generateSTL(config: any, modeling: Modeling) {
         message('stl', stlExport(mesh, { binary: true }))
     } catch (e) {
         console.error(e)
-        message('log', 'Error generating model') 
+        message('log', 'Error generating model')
     }
 }
 

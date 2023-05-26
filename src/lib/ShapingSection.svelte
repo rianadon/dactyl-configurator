@@ -115,10 +115,6 @@
      @apply input-basic text-ellipsis;
  }
 
- input:focus + div>div {
-     @apply border-teal-500;
- }
-
  .preset {
      @apply bg-[#99F0DC] dark:bg-gray-900 hover:bg-teal-500 dark:hover:bg-teal-700 dark:text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
  }

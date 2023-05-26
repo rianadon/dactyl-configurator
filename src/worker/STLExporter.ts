@@ -9,7 +9,7 @@
  */
 
 import type { Mesh } from 'manifold-3d';
-import { Vector3 } from 'three';
+import { Vector3 } from 'three/src/math/Vector3'
 
 interface Options {
     binary?: boolean

@@ -5,7 +5,7 @@
  import Info from 'svelte-material-icons/Information.svelte'
  import Shimmer from 'svelte-material-icons/Shimmer.svelte'
  import Popover from 'svelte-easy-popover'
- import { estimateFilament, fromCSG } from './lib/csg'
+ import { estimateFilament, fromMesh } from './lib/mesh'
  import { exampleGeometry } from './lib/example'
  import DactylWorker from './worker?worker'
 
@@ -43,7 +43,9 @@
  let generatingSCADSTL = false;
  let stlDialogOpen = false;
  let sponsorOpen = false;
- let instructionsOpen = true;
+ let instructionsOpen = !(localStorage['instructions'] === 'false')
+
+ $: localStorage['instructions'] = JSON.stringify(instructionsOpen)
 
  exampleGeometry().then(g => {
      // Load the example gemoetry if nothing has been rendered yet
@@ -125,7 +127,7 @@
          } else if (e.data.type == 'csg') {
              // Preview finished. Show it!
              generatingCSG = false;
-             geometries = fromCSG(e.data.data);
+             geometries = fromMesh(e.data.data);
              filament = estimateFilament(e.data.data[0]?.volume);
          } else if (e.data.type == 'log') {
              // Logging from OpenSACD
@@ -135,20 +137,17 @@
  }
 </script>
 
-<header class="px-8 pb-4 pt-12 md:flex items-center mb-4">
+<header class="px-8 pb-4 pt-12 sm:flex items-center mb-4">
   <h1 class="dark:text-slate-100 text-4xl font-semibold flex-1">Dactyl Keyboard Configurator</h1>
-  <div class="flex gap-4 mt-6 md:mt-0 md:ml-2">
-    {#if !instructionsOpen}<button class="border-2 border-gray-400/40 hover:bg-gray-400/20 px-3 py-1.5 rounded" on:click={() => instructionsOpen = true}>Instructions</button>{/if}
-    <button class="flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow" on:click={() => sponsorOpen = true}>
-      <Shimmer size="24" class="text-yellow-500 dark:text-yellow-300" />Support My Work
-    </button>
-  </div>
+  <button class="flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow mt-6 sm:mt-0 sm:ml-2" on:click={() => sponsorOpen = true}>
+    <Shimmer size="24" class="text-yellow-500 dark:text-yellow-300" />Support My Work
+  </button>
   <!--<a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/docs">
-    <Book size="2em" />
-  </a>
-  <a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/">
-    <Github size="2em" />
-  </a>-->
+       <Book size="2em" />
+       </a>
+       <a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/">
+       <Github size="2em" />
+       </a>-->
 </header>
 {#if instructionsOpen}
   <Instructions on:close={() => instructionsOpen = false} />
@@ -156,7 +155,7 @@
 <main class="mt-4 px-8 dark:text-slate-100 flex flex-col-reverse xs:flex-row">
   <div class="xs:w-80 md:w-auto">
     <div class="mb-8">
-      <button class="button" on:click={downloadSCAD}>Download OpenSCAD</button>
+      <button class="help-button" on:click={() => instructionsOpen = !instructionsOpen}>{#if instructionsOpen}Hide Instructions{:else}Show Instructions{/if}</button>
       <button class="button" on:click={downloadSTL}>Download STL</button>
     </div>
 
@@ -234,12 +233,12 @@
   <RenderDialog>
     This may take a few seconds.
   </RenderDialog>
-{/if}
-{#if stlDialogOpen}
+{:else if stlDialogOpen}
   <RenderDialog logs={logs} closeable={!generatingSCADSTL} on:close={() => stlDialogOpen= false} generating={generatingSTL}>
-    <p>Your model should download in a few seconds.</p>
+    <p class="mb-1">Your model should download in a few seconds.</p>
+    <p class="mb-1">Want to edit it in OpenSCAD? You can download the source file <button class="underline text-teal-500" on:click={downloadSCAD}>here</button>.</p>
 
-    <div class="bg-gray-100 dark:bg-gray-900 px-4 py-2 my-4 mx-2 rounded text-left">
+    <div class="bg-gray-100 dark:bg-gray-900 px-4 py-2 my-4 rounded text-left">
       <p class="font-bold mb-1">A few seconds? Why so fast?</p>
       <p>Model generation uses <a class="underline text-teal-500" href="github.com/elalish/Manifold">Manifold</a>, an extremely fast geometry kernel.</p>
       <p>Recent versions of OpenSCAD use this kernel too for faster renders.</p>
@@ -270,10 +269,10 @@
  }
 
  .button {
-     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-bold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
+     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-semibold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
  }
  .help-button {
-     @apply border-2 border-gray-200 dark:bg-gray-900 hover:bg-gray-300 dark:hover:bg-gray-700 dark:text-white py-2 px-4 rounded focus:outline-none focus:border-teal-500;
+     @apply border-2 border-purple-300 dark:border-gray-900 hover:bg-purple-100 dark:hover:bg-gray-800 dark:text-white py-2 px-4 rounded focus:outline-none focus:border-teal-500;
  }
 
  .preset {

@@ -15,10 +15,10 @@
   <span slot="title">Support My Work</span>
   <div slot="content">
     <p class="mb-1 ">Thanks for your interest! Programming takes lots of time, and I'm looking for ways to keep this project sustainable.</p>
-    <p class="mb-1">What's next for this project? I've been building a <a class="underline text-teal-500" target="_blank" href="https://github.com/rianadon/dactyl-configurator/issues/4">second version of this tool</a> over the past month. It's even more capable, with trackball support, custom key layouts, rounded edges, form-fitting wrist rests, and more.</p>
+    <p class="mb-1">What's next for this project? I've been building a <a class="underline text-teal-500" target="_blank" rel="noreferrer" href="https://github.com/rianadon/dactyl-configurator/issues/4">second version of this tool</a> over the past month. It's even more capable, with trackball support, custom key layouts, rounded edges, form-fitting wrist rests, and more.</p>
     <p class="mb-1">It would be a dream to work on keyboard design & ergonomics part time, continuing to build new generators and seeing what the community makes with them. Your support will get me one step closer to this goal.</p>
     <p class="text-center">
-      <a href="https://github.com/sponsors/rianadon" target="_blank" class="mt-6 mb-3 inline-flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow">
+      <a href="https://github.com/sponsors/rianadon" target="_blank" rel="noreferrer" class="mt-6 mb-3 inline-flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow">
         <Heart size="24" class="text-yellow-500 dark:text-yellow-300" />Sponsor Me on GitHub
       </a>
       <br />
@@ -33,12 +33,12 @@
           <button class="preset" on:click={() => iUse('Ko-fi')}>Ko-fi</button>
           <button class="preset" on:click={() => iUse('crypto')}>Cryptocurrencies</button>
         </div>
-        <img class="absolute w-0 h-0" src="https://pageviews.ryanis.cool/by/nogh" />
+        <img class="absolute w-0 h-0" src="https://pageviews.ryanis.cool/by/nogh" alt="" />
       {:else if suggested}
         <p class="mt-2 italic">Thanks! I've recorded your suggestion of a {suggested} account.</p>
       {/if}
     </p>
-    <img class="absolute w-0 h-0" src="https://pageviews.ryanis.cool/by/sponsor" />
+    <img class="absolute w-0 h-0" src="https://pageviews.ryanis.cool/by/sponsor" alt="" />
   </div>
 </Dialog>
 <style lang="postcss">
