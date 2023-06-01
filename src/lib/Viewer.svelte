@@ -5,17 +5,20 @@
  import WebGL from 'three/examples/jsm/capabilities/WebGL'
 
  export let geometries: THREE.Geometry[];
+ export let showSupports: boolean;
  export let style: string;
 
  let canvas;
  let camera: THREE.PerspectiveCamera;
  let root: any;
 
+ const middle = new THREE.Vector3()
 
  const cameraFOV = 45;
- const size = new THREE.Vector3();
+ const size = new THREE.Vector3(1, 1, 1);
 
- $: loadGeometries(geometries)
+ $: validGeometries = geometries.filter(g => !!g)
+ $: loadGeometries(validGeometries)
 
  $: {
      // Give the camera an initial position
@@ -28,18 +31,20 @@
  function loadGeometries(gs: THREE.BufferGeometry[]) {
      // Compute bounding boxes of the gemoetries
      const boundingBox = new THREE.Box3(new THREE.Vector3(-0.1, -0.1, -0.1), new THREE.Vector3(0.1, 0.1, 0.1));
-     for (const g of gs) {
-         g.computeBoundingBox();
-         boundingBox.union(g.boundingBox);
+     if (gs.length == 1) {
+         gs[0].computeBoundingBox();
+         boundingBox.union(gs[0].boundingBox);
+
+         boundingBox.getCenter(middle);
+         boundingBox.getSize(size);
      }
 
-     const middle = new THREE.Vector3();
-     boundingBox.getCenter(middle);
      for (const g of gs) {
+         if (g.wastransformed) continue
          g.applyMatrix4(new THREE.Matrix4().makeTranslation(-middle.x, -middle.y, -middle.z));
+         g.wastransformed = true
      }
 
-     boundingBox.getSize(size);
      resize();
  }
 
@@ -65,11 +70,16 @@
 {#if WebGL.isWebGLAvailable()}
   <div class="container" bind:this={canvas} style={style}>
     <SC.Canvas antialias alpha={true}>
-      {#each geometries as geometry}
-	    <SC.Mesh geometry={geometry} />
-      {/each}
+      {#if validGeometries[0]}
+	    <SC.Mesh geometry={validGeometries[0]} />
+      {/if}
+      {#if validGeometries[1] && showSupports}
+        <SC.Mesh geometry={validGeometries[1]} material={new THREE.MeshStandardMaterial({ color: 0xcc80f2, transparent: true, opacity: 0.85 })} />
+      {/if}
 	  <PerspectiveCamera fov={cameraFOV} bind:self={camera} bind:root={root} />
       <SC.OrbitControls enableZoom={false} />
+      <SC.AmbientLight intensity={0.8} />
+      <SC.DirectionalLight intensity={0.3} position={[0, 0, -20]} />
     </SC.Canvas>
   </div>
 {:else}

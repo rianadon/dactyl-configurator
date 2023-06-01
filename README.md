@@ -25,7 +25,9 @@ The new developments of this work are:
 - Fast CSG previews are generated using ~~the [OpenJSCAD project](https://github.com/jscad/OpenJSCAD.org). I've added a new back end to the [scad-clj](https://github.com/farrellm/scad-clj) library (which has been copied into this project due to how heavily I've edited it) to generate the OpenJSCAD objects.~~ Since Manifold is such a fast kernel, it is also used for previews. I've written an interop layer to give Manifold the same API as OpenJSCAD.
 - CSGs are previewed with Three.JS, using the [Svelte-cubed](https://svelte-cubed.vercel.app) bindings.
 - The ClojureScript source files are compiled into a web worker, which is run from [Svelte](https://svelte.dev)/TypeScript frontend.
-- Configurations are compressed with [protobuf](https://protobuf.dev) and saved to the URL. This makes it easy to share configurations with others. I've also switched to using camelcase for the json configuration, which makes integrating with protobuf easier.
+- Configurations are compressed with [protobuf](https://protobuf.dev) and saved to the URL. This makes it easy to share configurations with others. I've also switched to using camelcase for the JSON configuration, which makes integrating with protobuf easier.
+- Confusing options have help information explaining what they do.
+- I've made a few edits to the presets and Dactyl code to create better default models. These include making TRRS jacks the default instead of RJ9, removing the Pro Micro holder since it rarely correctly attaches to the side of the case, and fixing the TRRS holder so that it's attached to the case.
 
 ## Building and running
 

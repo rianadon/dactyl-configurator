@@ -72,6 +72,7 @@ function fillInsides(faces: number[][][]) {
 }
 
 export const createModeling = (manifold: ManifoldStatic) => ({
+    manifold,
     booleans: {
         subtract(...objs: Manifold[]) {
             return manifold.difference(dd(objs))
@@ -228,7 +229,14 @@ export const createModeling = (manifold: ManifoldStatic) => ({
 export type Modeling = ReturnType<typeof createModeling>
 
 export function serializeMesh(m: Manifold) {
-    const mesh = m.getMesh()
+    let volume = 0
+    let mesh
+    if (m.vertices) {
+        mesh = { vertProperties: m.vertices, triVerts: m.faces }
+    } else {
+        volume = m.getProperties().volume
+        mesh = m.getMesh()
+    }
 
     const cb = new Vector3();
     const ab = new Vector3();
@@ -260,5 +268,5 @@ export function serializeMesh(m: Manifold) {
         i += 9;
     }
 
-    return { vertices, normals }
+    return { vertices, normals, volume }
 }

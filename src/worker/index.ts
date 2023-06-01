@@ -2,9 +2,11 @@ import type { ManifoldStatic, Mesh } from "manifold-3d"
 import * as Dactyl from '../../target/dactyl.js'
 import Module from '../assets/manifold'
 import manifoldWasmUrl from '../assets/manifold.wasm?url'
-import { createModeling, serializeMesh, type Modeling } from "./modeling.js"
+import { createModeling, serializeMesh, type Modeling } from './modeling'
+import createGC, { type GC } from './gc'
 import scadWasmUrl from '../assets/openscad.wasm?url'
-import stlExport from "./STLExporter.js"
+import stlExport from './STLExporter'
+import { supportManifold } from './supports'
 
 (Module as (a: any) => Promise<ManifoldStatic>)({
     locateFile: () => manifoldWasmUrl,
@@ -17,6 +19,7 @@ const message = (type: string, data: any) => postMessage({ type, data })
 function main(manifold: ManifoldStatic) {
     manifold.setup()
     manifold.setCircularSegments(100) // Make the circles look pretty and precise!
+    const cleanup = createGC(manifold)
     const modeling = createModeling(manifold)
     message("scriptsinit", null)
 
@@ -24,27 +27,31 @@ function main(manifold: ManifoldStatic) {
         const { type, data } = event.data
         console.log('Worker received', type, data)
         switch (type) {
-            case 'csg': return generateCSG(data, modeling)
-            case 'stl': return generateSTL(data, modeling)
+            case 'csg': return generateCSG(data, modeling, cleanup)
+            case 'stl': return generateSTL(data, modeling, cleanup)
             case 'scad': return generateSCAD(data)
             case 'scadstl': return generateSCAD_STL(data)
         }
     }
 }
 
-function generateCSG(config: any, modeling: Modeling) {
+function generateCSG(config: any, modeling: Modeling, cleanup: GC) {
     try {
-        message('csg', serializeMesh(Dactyl.generateManifold(config, modeling)))
+        const model = Dactyl.generateManifold(config, modeling)
+        message('csg', serializeMesh(model))
+        message('supports', supportManifold(model, modeling.manifold))
+        cleanup()
     } catch (e) {
         console.error(e)
         message("csgerror", serializeErr(e))
     }
 }
 
-function generateSTL(config: any, modeling: Modeling) {
+function generateSTL(config: any, modeling: Modeling, cleanup: GC) {
     try {
         const mesh: Mesh = Dactyl.generateManifold(config, modeling).getMesh()
         message('stl', stlExport(mesh, { binary: true }))
+        cleanup()
     } catch (e) {
         console.error(e)
         message('log', 'Error generating model')
@@ -85,6 +92,9 @@ function onSCADInit(config: any) {
 }
 
 function serializeErr(err: Error) {
+    if (typeof err == 'number') {
+        console.log(err)
+    }
     return {
         name: err.name,
         message: err.message,

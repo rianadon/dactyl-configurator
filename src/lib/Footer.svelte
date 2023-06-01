@@ -11,10 +11,10 @@
     Special thanks to everyone who has made the Dactyl keyboard possible, including <a class="darka" href="https://github.com/adereth">@adereth</a> (original Dactyl Design), <a class="darka"  href="https://github.com/tshort">@tshort</a> (Dactyl Manuform) and <a class="darka" href="https://github.com/ibnuda">@ibnuda</a> (Dactyl Generator).
 </p>
 <p class="mb-2 text-gray-500 dark:text-gray-400">
-    For trackballs and more advanced settings, I recommend <a href="https://github.com/joshreve/dactyl-keyboard">@joshreve's</a> and <a href="https://github.com/bullwinkle3000/dactyl-keyboard">@bullwinkle3000's</a> CadQuery generators, which can also output STEP files.
+  For trackballs and more advanced settings, I recommend <a href="https://github.com/joshreve/dactyl-keyboard">@joshreve's</a> and <a href="https://github.com/bullwinkle3000/dactyl-keyboard">@bullwinkle3000's</a> CadQuery generators, which can also output STEP files.
 </p>
 <p class="mb-2 text-gray-500 dark:text-gray-400">
-    You can find this website's source on <a href="https://github.com/rianadon/dactyl-configurator">GitHub</a>. It's licensed under the <a href="https://github.com/rianadon/dactyl-configurator/blob/main/LICENSE.md">AGPL</a>.
+  You can find this website's <a href="https://github.com/rianadon/dactyl-configurator">source</a> and <a href="https://github.com/rianadon/dactyl-configurator/releases">release notes</a> on GitHub. The code is licensed under the <a href="https://github.com/rianadon/dactyl-configurator/blob/main/LICENSE.md">AGPL</a>.
 </p>
 
 <style lang="postcss">

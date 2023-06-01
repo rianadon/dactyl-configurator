@@ -23,7 +23,6 @@ function difference2(data, reference, output) {
     return Object.keys(data).reduce((diff, key) => {
         if (areDifferent(data[key], reference[key])) {
             output[key] = data[key];
-            console.log(key, 'differs');
             return true;
         }
         return diff;

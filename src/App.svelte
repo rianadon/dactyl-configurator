@@ -1,11 +1,9 @@
 <script lang="ts">
  import Viewer from './lib/Viewer.svelte'
- import Github from 'svelte-material-icons/Github.svelte'
- import Book from 'svelte-material-icons/BookOpenVariant.svelte'
  import Info from 'svelte-material-icons/Information.svelte'
  import Shimmer from 'svelte-material-icons/Shimmer.svelte'
  import Popover from 'svelte-easy-popover'
- import { estimateFilament, fromMesh } from './lib/mesh'
+ import { SUPPORTS_DENSITY, estimateFilament, fromMesh } from './lib/mesh'
  import { exampleGeometry } from './lib/example'
  import DactylWorker from './worker?worker'
 
@@ -19,6 +17,7 @@
  import Footer from './lib/Footer.svelte';
  import ShapingSection from './lib/ShapingSection.svelte';
  import Instructions from './lib/Instructions.svelte';
+ import FilamentChart from './lib/FilamentChart.svelte';
  import { serialize, deserialize } from './lib/serialize';
 
  import presetLight from './assets/presets/lightcycle.default.json'
@@ -27,7 +26,9 @@
  import presetCorne from './assets/presets/manuform.corne.json'
  import presetSmallest from './assets/presets/manuform.smallest.json'
 
- let geometries = [];
+ let keyboardGeometry = null;
+ let keyboardVolume = 0;
+ let supportGeometry = null;
  let filament;
  let referenceElement;
 
@@ -44,12 +45,13 @@
  let stlDialogOpen = false;
  let sponsorOpen = false;
  let instructionsOpen = !(localStorage['instructions'] === 'false')
+ let showSupports = false
 
  $: localStorage['instructions'] = JSON.stringify(instructionsOpen)
 
  exampleGeometry().then(g => {
      // Load the example gemoetry if nothing has been rendered yet
-     if (!geometries.length) geometries = [g]
+     if (!keyboardGeometry) keyboardGeometry = g
  })
 
  $: try {
@@ -102,6 +104,8 @@
      // Reset the state
      generatingCSG = true;
      csgError = undefined;
+     filament = undefined;
+     supportGeometry = null;
      logs = [];
      if (myWorker) myWorker.terminate();
      myWorker = new DactylWorker()
@@ -127,8 +131,11 @@
          } else if (e.data.type == 'csg') {
              // Preview finished. Show it!
              generatingCSG = false;
-             geometries = fromMesh(e.data.data);
-             filament = estimateFilament(e.data.data[0]?.volume);
+             keyboardGeometry = fromMesh(e.data.data);
+             keyboardVolume = e.data.data.volume
+         } else if (e.data.type == 'supports') {
+             supportGeometry = fromMesh(e.data.data);
+             filament = estimateFilament(keyboardVolume, e.data.data.volume);
          } else if (e.data.type == 'log') {
              // Logging from OpenSACD
              logs = [...logs, e.data.data]
@@ -142,21 +149,15 @@
   <button class="flex items-center gap-2 bg-yellow-400/10 border-2 border-yellow-400 px-3 py-1.5 rounded hover:bg-yellow-400/60 hover:shadow-md hover:shadow-yellow-400/30 transition-shadow mt-6 sm:mt-0 sm:ml-2" on:click={() => sponsorOpen = true}>
     <Shimmer size="24" class="text-yellow-500 dark:text-yellow-300" />Support My Work
   </button>
-  <!--<a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/docs">
-       <Book size="2em" />
-       </a>
-       <a class="text-gray-800 dark:text-gray-100 mx-2 md:mx-4" href="/">
-       <Github size="2em" />
-       </a>-->
 </header>
 {#if instructionsOpen}
   <Instructions on:close={() => instructionsOpen = false} />
 {/if}
-<main class="mt-4 px-8 dark:text-slate-100 flex flex-col-reverse xs:flex-row">
+<main class="mt-6 mb-16 px-8 dark:text-slate-100 flex flex-col-reverse xs:flex-row">
   <div class="xs:w-80 md:w-auto">
     <div class="mb-8">
       <button class="help-button" on:click={() => instructionsOpen = !instructionsOpen}>{#if instructionsOpen}Hide Instructions{:else}Show Instructions{/if}</button>
-      <button class="button" on:click={downloadSTL}>Download STL</button>
+      <button class="button" on:click={downloadSTL}>Download Model</button>
     </div>
 
     <h2 class="text-2xl text-teal-500 dark:text-teal-300 font-semibold mb-2">Presets</h2>
@@ -196,17 +197,21 @@
       </div>
     {/if}
     <div class="viewer relative xs:sticky h-[100vh] top-0">
-      <Viewer geometries={geometries} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
+      <Viewer geometries={[keyboardGeometry, supportGeometry]} showSupports={showSupports} style="opacity: {generatingCSG ? 0.2 : 1}"></Viewer>
       {#if filament}
-        <div class="absolute bottom-0 right-0 text-right mb-2">
+        <div class="absolute bottom-0 right-0 mb-2">
           {filament.length.toFixed(1)}m <span class="text-gray-600 dark:text-gray-100">of filament</span>
-          <div class="align-[-18%] inline-block text-gray-600 dark:text-gray-100" bind:this={referenceElement}>
+          <button class="align-[-18%] inline-block text-gray-600 dark:text-gray-100" bind:this={referenceElement}>
             <Info size="20px" />
-          </div>
-          <Popover triggerEvents={["hover", "focus"]} {referenceElement} placement="top" spaceAway={4}>
-            <div class="rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 mx-4 w-80">
-              <p>Estimate using 100% infill, no supports.</p>
-              <p>This will set you back at least ${filament.cost.toFixed(2)}.</p>
+          </button>
+          <Popover triggerEvents={["hover", "focus"]} {referenceElement} placement="top" spaceAway={4} on:change={({ detail: { isOpen }}) => showSupports = isOpen}>
+            <div class="flex gap-4 items-end rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 mx-4 text-gray-600 dark:text-gray-100">
+              <FilamentChart fractionKeyboard={filament.fractionKeyboard} />
+              <div>
+                <p class="whitespace-nowrap mb-2">Estimated using <span class="font-semibold text-teal-500 dark:text-teal-400">100% infill</span>,<br><span class="font-semibold text-purple-500 dark:text-purple-400">{SUPPORTS_DENSITY*100}% supports density</span>.</p>
+                <p class="whitespace-nowrap mb-1">This will cost about <span class="font-semibold text-black dark:text-white">${filament.cost.toFixed(2)}</span>.</p>
+                <p class="whitespace-nowrap text-sm">The keyboard itself uses {filament.keyboard.length.toFixed(1)}m.</p>
+              </div>
             </div>
           </Popover>
         </div>
@@ -223,7 +228,11 @@
     </div>
   </div>
 </main>
-<footer class="px-8 pb-8 pt-16">
+<p class="cosmos mx-2 mb-8 px-2 py-2 relative mb-2 from-purple-100 to-teal-100 dark:from-purple-900 dark:to-teal-800 rounded flex items-center justify-between">
+  <span class="bg-[#eaecfc]/80 dark:bg-[#353c70]/50 px-4 py-2 rounded mix-blend-luminosity"><span class="font-semibold hidden sm:block md:inline">Enjoying the configurator?</span> I'm building Cosmos, a new configurable keyboard.</span>
+  <a class="rounded bg-gradient-to-br from-[#3c0d61] to-gray-700 text-white dark:text-black dark:from-purple-200 dark:to-purple-100 py-2 px-4 mx-4 font-semibold flex-none hover:from-purple-700 hover:to-teal-800 hover:dark:from-white hover:dark:to-white hover:shadow-md hover:shadow-teal-900/30 hover:dark:shadow-teal-200/30 transition-shadow" href="https://ryanis.cool/cosmos?utm_source=dactyl">Check it out</a>
+</p>
+<footer class="px-8 pb-8">
   <Footer></Footer>
 </footer>
 {#if sponsorOpen}
@@ -235,8 +244,8 @@
   </RenderDialog>
 {:else if stlDialogOpen}
   <RenderDialog logs={logs} closeable={!generatingSCADSTL} on:close={() => stlDialogOpen= false} generating={generatingSTL}>
-    <p class="mb-1">Your model should download in a few seconds.</p>
-    <p class="mb-1">Want to edit it in OpenSCAD? You can download the source file <button class="underline text-teal-500" on:click={downloadSCAD}>here</button>.</p>
+    <p class="mb-1">An STL file for 3D printing should download in a few seconds.</p>
+    <p class="mb-1">Want to edit the model in OpenSCAD? Download the source file <button class="underline text-teal-500" on:click={downloadSCAD}>here</button>.</p>
 
     <div class="bg-gray-100 dark:bg-gray-900 px-4 py-2 my-4 rounded text-left">
       <p class="font-bold mb-1">A few seconds? Why so fast?</p>
@@ -269,13 +278,25 @@
  }
 
  .button {
-     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-semibold py-2 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
+     @apply bg-purple-300 dark:bg-gray-900 hover:bg-purple-400 dark:hover:bg-teal-700 dark:text-white font-semibold px-4 h-[42px] rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
  }
  .help-button {
-     @apply border-2 border-purple-300 dark:border-gray-900 hover:bg-purple-100 dark:hover:bg-gray-800 dark:text-white py-2 px-4 rounded focus:outline-none focus:border-teal-500;
+     @apply border-2 border-purple-300 dark:border-gray-700 hover:bg-purple-100 dark:hover:bg-gray-800 dark:hover:border-teal-500 dark:text-white h-[42px] px-4 rounded focus:outline-none focus:border-teal-500;
  }
 
  .preset {
      @apply bg-[#99F0DC] dark:bg-gray-900 hover:bg-teal-500 dark:hover:bg-teal-700 dark:text-white py-1 px-4 rounded focus:outline-none border border-transparent focus:border-teal-500 mb-2;
+ }
+
+ .cosmos {
+     background-image: url('/stars.png'), linear-gradient(to right, var(--tw-gradient-stops));
+     background-repeat: repeat, no-repeat;
+     background-size: auto 100%, auto auto;
+     background-position: center, 0% 0%;
+ }
+ @media (prefers-color-scheme: dark) {
+     .cosmos {
+         background-image: url('/starsdark.png'), linear-gradient(to right, var(--tw-gradient-stops));
+     }
  }
 </style>
