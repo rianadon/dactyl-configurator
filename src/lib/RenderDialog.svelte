@@ -14,8 +14,8 @@
  export let logs: string[] = [];
 </script>
 
-<div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-900/80">
-  <div class="mt-24 mx-auto w-[38rem] text-center p-8 rounded-md bg-white dark:bg-gray-800">
+<div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-900/80 px-2">
+  <div class="mt-24 mx-auto w-[38rem] max-w-full text-center p-8 rounded-md bg-white dark:bg-gray-800">
     <div class="relative">
 	  <h3 class="text-2xl font-medium text-gray-900 dark:text-white">
       {#if generating}
