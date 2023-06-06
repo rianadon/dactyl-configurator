@@ -22,7 +22,7 @@
 
  import presetOrigOrig from './assets/presets/original.original.json'
  import presetLight from './assets/presets/original.lightcycle.json'
- import presetErgodox from './assets/presets/manuform.ergodox.json'
+ import presetDefault from './assets/presets/manuform.default.json'
  import presetOriginal from './assets/presets/manuform.tshort.json'
  import presetCorne from './assets/presets/manuform.corne.json'
  import presetSmallest from './assets/presets/manuform.smallest.json'
@@ -167,7 +167,7 @@
       <div>
         <button class="preset" on:click={() => loadPreset(presetCorne)}>Corne</button>
         <button class="preset" on:click={() => loadPreset(presetSmallest)}>Smallest</button>
-        <button class="preset" on:click={() => loadPreset(presetErgodox)}>Ergodox</button>
+        <button class="preset" on:click={() => loadPreset(presetDefault)}>Default</button>
         <button class="preset" on:click={() => loadPreset(presetOriginal)}>Original</button>
       </div>
     </div>

@@ -54,7 +54,7 @@ function generateSTL(config: any, modeling: Modeling, cleanup: GC) {
         cleanup()
     } catch (e) {
         console.error(e)
-        message('log', 'Error generating model')
+        message('log', 'Error generating model with Manifold. Try using the link above to generate the model with OpenSCAD.')
     }
 }
 
