@@ -3,7 +3,7 @@ syntax = "proto2";
 import "proto/common.proto";
 package dactyl;
 
-message Lightcycle {
+message Original {
   message Keys {
     optional int32 columns = 1 [(min) = 4, (max) = 7, (name) = "Number of Columns (4–7)"];
     optional bool num_row = 2 [(name) = "Use Number Row"];

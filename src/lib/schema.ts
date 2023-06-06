@@ -1,5 +1,5 @@
 import {Manuform} from '../../target/proto/manuform'
-import {Lightcycle} from '../../target/proto/lightcycle'
+import {Original} from '../../target/proto/original'
 
 export interface FieldSchema {
     var: string
@@ -52,4 +52,4 @@ function fieldsToSchema(ns: string, fields: readonly any[]) {
 
 export const ManuformSchema = fieldsToSchema("dactyl", Manuform.fields)
 
-export const LightcycleSchema: Schema = fieldsToSchema("dactyl", Lightcycle.fields)
+export const OriginalSchema: Schema = fieldsToSchema("dactyl", Original.fields)

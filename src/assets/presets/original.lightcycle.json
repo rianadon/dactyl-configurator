@@ -1,9 +1,9 @@
 {
-    "keyboard": "lightcycle",
+    "keyboard": "original",
     "options": {
         "keys": {
             "columns": 6,
-            "numRow": true,
+            "numRow": false,
             "lastRow": true,
             "switchType": "box",
             "thumbCount": "five",

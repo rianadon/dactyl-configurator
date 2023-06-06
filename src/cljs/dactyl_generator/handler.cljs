@@ -177,4 +177,4 @@
   (let [options (get config "options")]
     (case (get config "keyboard")
       "manuform" (generate-manuform (api-generate-manuform options))
-      "lightcycle" (generate-lightcycle (api-generate-lightcycle options)))))
+      "original" (generate-lightcycle (api-generate-lightcycle options)))))

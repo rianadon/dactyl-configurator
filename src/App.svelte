@@ -8,9 +8,9 @@
  import DactylWorker from './worker?worker'
 
  import manuform from './assets/manuform.json'
- import lightcycle from './assets/lightcycle.json'
+ import original from './assets/original.json'
  import type { Schema } from './lib/schema'
- import { ManuformSchema, LightcycleSchema } from './lib/schema'
+ import { ManuformSchema, OriginalSchema } from './lib/schema'
  import Field from './lib/Field.svelte';
  import RenderDialog from './lib/RenderDialog.svelte';
  import SupportDialog from './lib/SupportDialog.svelte';
@@ -20,7 +20,8 @@
  import FilamentChart from './lib/FilamentChart.svelte';
  import { serialize, deserialize } from './lib/serialize';
 
- import presetLight from './assets/presets/lightcycle.default.json'
+ import presetOrigOrig from './assets/presets/original.original.json'
+ import presetLight from './assets/presets/original.lightcycle.json'
  import presetErgodox from './assets/presets/manuform.ergodox.json'
  import presetOriginal from './assets/presets/manuform.tshort.json'
  import presetCorne from './assets/presets/manuform.corne.json'
@@ -62,11 +63,11 @@
  $: process(state);
 
  let schema: Schema
- $: schema = (state.keyboard == "manuform" ? ManuformSchema : LightcycleSchema);
- $: defaults = (state.keyboard == "manuform" ? manuform : lightcycle);
+ $: schema = (state.keyboard == "manuform" ? ManuformSchema : OriginalSchema);
+ $: defaults = (state.keyboard == "manuform" ? manuform : original);
 
  function loadPreset(preset: any) {
-     const defaults = preset.keyboard == "manuform" ? manuform : lightcycle;
+     const defaults = preset.keyboard == "manuform" ? manuform : original;
      state = JSON.parse(JSON.stringify({
          keyboard: preset.keyboard,
          options: { ...defaults.options, ...preset.options }
@@ -171,9 +172,10 @@
       </div>
     </div>
     <div class="lg:flex justify-between items-baseline">
-      <div class="mb-2 mr-4">Lightcycle</div>
+      <div class="mb-2 mr-4">Original Dactyl</div>
       <div>
-        <button class="preset" on:click={() => loadPreset(presetLight)}>Basic</button>
+        <button class="preset" on:click={() => loadPreset(presetOrigOrig)}>Original</button>
+        <button class="preset" on:click={() => loadPreset(presetLight)}>Lightcycle</button>
       </div>
     </div>
 
@@ -191,9 +193,9 @@
     {/each}
   </div>
   <div class="flex-1">
-    {#if state.keyboard == "lightcycle"}
+    {#if state.keyboard == "original"}
       <div class="border-2 border-yellow-400 py-2 px-4 m-2 rounded bg-white dark:bg-gray-900">
-        Generating the Lightcycle case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
+        Generating the Original Dactyl case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
       </div>
     {/if}
     <div class="viewer relative xs:sticky h-[100vh] top-0">

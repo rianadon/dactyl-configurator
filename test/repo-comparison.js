@@ -61,18 +61,18 @@ test('tshort-left', async t => {
 });
 
 // test('adereth-right', async t => {
-//     const lightcycle = JSON.parse(await readText('test/ref-adereth/right.json'));
+//     const original = JSON.parse(await readText('test/ref-adereth/right.json'));
 //     const reference = await readSCAD('test/ref-adereth/dactyl-top-right.scad');
 
-//     await writeFile('test/ref-adereth/mydright.scad', generateSCAD(lightcycle));
+//     await writeFile('test/ref-adereth/mydright.scad', generateSCAD(original));
 //     await writeFile('test/ref-adereth/sdright.scad', reference);
 
-//     t.is(generateSCAD(lightcycle), reference, 'Configurations do not match')
+//     t.is(generateSCAD(original), reference, 'Configurations do not match')
 // });
 
 // test('adereth-left', async t => {
-//     const lightcycle = JSON.parse(await readText('test/ref-adereth/right.json'));
+//     const original = JSON.parse(await readText('test/ref-adereth/right.json'));
 //     const reference = await readSCAD('test/ref-adereth/right.scad');
 
-//     t.is(generateSCAD(lightcycle), reference, 'Configurations do not match')
+//     t.is(generateSCAD(original), reference, 'Configurations do not match')
 // });

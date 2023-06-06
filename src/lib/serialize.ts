@@ -1,8 +1,8 @@
 import {Manuform} from '../../target/proto/manuform'
-import {Lightcycle} from '../../target/proto/lightcycle'
+import {Original} from '../../target/proto/original'
 
 import manuform from '../assets/manuform.json'
-import lightcycle from '../assets/lightcycle.json'
+import original from '../assets/original.json'
 
 interface State {
     keyboard: string
@@ -44,29 +44,30 @@ export function serialize(state: State) {
         if (!difference2(state.options, manuform.options, diff)) return "manuform"
         data = Manuform.toBinary(diff)
     }
-    if (state.keyboard === "lightcycle") {
+    if (state.keyboard === "original") {
         const diff = {}
-        if (!difference2(state.options, lightcycle.options, diff)) return "lightcycle"
-        data = Lightcycle.toBinary(diff)
+        if (!difference2(state.options, original.options, diff)) return "original"
+        data = Original.toBinary(diff)
     }
     return state.keyboard + SPLIT_CHAR + btoa(String.fromCharCode(...data));
 }
 
 export function deserialize(str: string, fallback: State): State {
     if (str === "manuform") return manuform
-    if (str === "lightcycle") return lightcycle
+    if (str === "original" || str === "lightcycle") return original
 
     const split = str.split(SPLIT_CHAR)
     if (split.length != 2) return fallback
 
-    const [keyboard, b64] = split
+    let [keyboard, b64] = split
+    if (keyboard === "lightcycle") keyboard = "original" // For compatibility
     const data = Uint8Array.from(atob(b64), c => c.charCodeAt(0))
 
     let options: object = null
     if (keyboard === "manuform")
         options = recreate2(Manuform.fromBinary(data), manuform.options)
-    if (keyboard === "lightcycle")
-        options = recreate2(Lightcycle.fromBinary(data), lightcycle.options)
+    if (keyboard === "original")
+        options = recreate2(Original.fromBinary(data), original.options)
     if (!options) return fallback
 
     return { keyboard, options }
