@@ -306,6 +306,9 @@
                      (thumb-place c 0  0 (union shape (extended-plates c 1)))
                      (thumb-place c 1 -1 (union shape (extended-plates c 1)))
                      (thumb-place c 1  0 (union shape (extended-plates c 1))))
+       :five-lightcycle (union
+                         (thumb-place c 0 (/ -1 2) (union shape (extended-plates c 2)))
+                         (thumb-place c 1 (/ -5 8) (union shape (extended-plates c 1.75))))
        (union (thumb-place c 0 -0.5 (union shape (extended-plates c 2)))
               (thumb-place c 1 -0.5 (union shape (extended-plates c 2)))))
      (case thumb-count
@@ -314,6 +317,10 @@
        :five (union (thumb-place c 1    1 (union shape (extended-plates c 1)))
                     (thumb-place c 2 (/ -3 4) (union shape (extended-plates c 1.5)))
                     (thumb-place c 2  (/ 3 4) (union shape (extended-plates c 1.5))))
+       :five-lightcycle (union
+                      (thumb-place c 1 (/ 7 8) (union shape (extended-plates c 1.25)))
+                      (thumb-place c 2 (/ -3 4) (union shape (extended-plates c 1.5)))
+                      (thumb-place c 2 (/ 3 4) (union shape (extended-plates c 1.5))))
        (union (thumb-place c 1  1 (union shape (extended-plates c 1)))
               (thumb-place c 2  1 (union shape (extended-plates c 1)))
               (thumb-place c 2  0 (union shape (extended-plates c 1)))
@@ -327,6 +334,8 @@
                      (thumb-place c 0  0 ((sa-cap c) 1))
                      (thumb-place c 1 -1 ((sa-cap c) 1))
                      (thumb-place c 1  0 ((sa-cap c) 1)))
+       :five-lightcycle (union (thumb-2x-column c ((sa-cap c) 2))
+                               (thumb-place c 1 (/ -5 8) ((sa-cap c) 1.75)))
        (union (thumb-2x-column c ((sa-cap c) 2))
               (thumb-place c 1 -0.5 ((sa-cap c) 2))))
      (case thumb-count
@@ -334,6 +343,8 @@
        :three (thumb-place c 1 1 ((sa-cap c) 1))
        :five (union (thumb-1x-column c (rotate (/ pi 2) [0 0 1] ((sa-cap c) 1.5)))
                     (thumb-place c 1 1 ((sa-cap c) 1)))
+       :five-lightcycle (union (thumb-1x-column c (rotate (/ pi 2) [0 0 1] ((sa-cap c) 1.5)))
+                               (thumb-place c 1 (/ 7 8) ((sa-cap c) 1.25)))
        (union (thumb-place c 1  1 ((sa-cap c) 1))
               (thumb-place c 2  1 ((sa-cap c) 1))
               (thumb-place c 2  0 ((sa-cap c) 1))
@@ -376,6 +387,12 @@
                                (thumb-place c 1 -1 (thumb-tr 1))
                                (thumb-place c 0  0 (thumb-bl 1))
                                (thumb-place c 1  0 (thumb-br 1))))
+       :five-lightcycle (triangle-hulls (thumb-place c 0 -0.5 (thumb-tl 2))
+                                        (thumb-place c 0 -0.5 (thumb-bl 2))
+                                        (thumb-place c 1 (/ -5 8) (thumb-br 1.75))
+                                        (thumb-place c 0 -0.5 (thumb-tl 2))
+                                        (thumb-place c 1 (/ -5 8) (thumb-tr 1.75))
+                                        (thumb-place c 1 (/ 7 8) (thumb-br 1.25)))
        (triangle-hulls #_(thumb-place c 1 -0.5 (thumb-tl 2))
                        (thumb-place c 0 -0.5 (thumb-bl 2))
                        (thumb-place c 1 -0.5 (thumb-br 2))
@@ -440,6 +457,29 @@
                              (thumb-place c 2  0   (thumb-br 1))
                              (thumb-place c 2 -1   (cmn/web-post-tl c web-thickness))
                              (thumb-place c 2 -1   (cmn/web-post-tr c web-thickness))))
+       :five-lightcycle (union
+                         (triangle-hulls (thumb-place c 1 (/ 7 8) (thumb-br 1.25))
+                                         (thumb-place c 1 (/ 7 8) (thumb-bl 1.25))
+                                         (thumb-place c 1 (/ -5 8) (thumb-tr 1.75))
+                                         (thumb-place c 1 (/ -5 8) (thumb-tl 1.75)))
+                         (triangle-hulls (thumb-place c 2 0.75 (thumb-br 1.5))
+                                         (thumb-place c 2 0.75 (thumb-bl 1.5))
+                                         (thumb-place c 2 -0.75 (thumb-tr 1.5))
+                                         (thumb-place c 2 -0.75 (thumb-tl 1.5)))
+
+                         (triangle-hulls (thumb-place c 2 0.75 (thumb-br 1.5))
+                                         (thumb-place c 2 0.75 (thumb-bl 1.5))
+                                         (thumb-place c 2 -0.75 (thumb-tr 1.5))
+                                         (thumb-place c 2 -0.75 (thumb-tl 1.5)))
+
+                         (triangle-hulls (thumb-place c 2 -0.75 (thumb-br 1.5))
+                                         (thumb-place c 1 (/ -5 8) (thumb-bl 1.75))
+                                         (thumb-place c 2 -0.75 (thumb-tr 1.5))
+                                         (thumb-place c 1 (/ -5 8) (thumb-tl 1.75))
+                                         (thumb-place c 2 0.75 (thumb-br 1.5))
+                                         (thumb-place c 1 (/ 7 8) (thumb-bl 1.25))
+                                         (thumb-place c 2 0.75 (thumb-tr 1.5))
+                                         (thumb-place c 1 (/ 7 8) (thumb-tl 1.25))))
        :five (union
               (triangle-hulls (thumb-place c 1  1   (thumb-br 1))
                               (thumb-place c 1  1   (thumb-bl 1))
@@ -506,6 +546,24 @@
                               #_(key-place   c 0  3        (cmn/web-post-tl c web-thickness))
                               #_(thumb-place c 1  0        (thumb-tr 1))
                               #_(thumb-place c 1  1        (thumb-tr 1)))
+       :five-lightcycle  (triangle-hulls (thumb-place c 0 -0.5 (thumb-br 2))
+                                         (key-place c 1 4 (cmn/web-post-bl c web-thickness))
+                                         (thumb-place c 0 -0.5 (thumb-tr 2))
+                                         (key-place c 1 4 (cmn/web-post-tl c web-thickness))
+                                         (key-place c 1 3 (cmn/web-post-bl c web-thickness))
+                                         (thumb-place c 0 -0.5 (thumb-tr 2))
+                                         (key-place c 0 3 (cmn/web-post-br c web-thickness))
+                                         (key-place c 0 3 (cmn/web-post-bl c web-thickness))
+                                         (thumb-place c 0 -0.5 (thumb-tr 2))
+                                         (thumb-place c 0 -0.5 (thumb-tl 2))
+                                         (key-place c 0 3 (cmn/web-post-bl c web-thickness))
+                                         (thumb-place c 1 (/ -5 8) (thumb-tr 1.75))
+                                         (thumb-place c 1 (/ 7 8) (thumb-br 1.25))
+                                         (key-place c 0 3 (cmn/web-post-bl c web-thickness))
+                                         (key-place c 0 3 (cmn/web-post-tl c web-thickness))
+                                         (thumb-place c 1 (/ 7 8) (thumb-br 1.25))
+                                         (thumb-place c 1 (/ 7 8) (thumb-tr 1.25))
+                                         )
        (triangle-hulls (thumb-place c 0 -0.5      (thumb-br 2))
                        (key-place   c 1 cornerrow (cmn/web-post-bl c web-thickness))
                        (thumb-place c 0 -0.5      (thumb-tr 2))
@@ -557,7 +615,7 @@
 (defn thumb-left-wall-column [c]
   (let [thumb-count (get c :configuration-thumb-count)
         thumb-column (case thumb-count
-                       :five (/ 5 2)
+                       (:five :five-lightcycle) (/ 5 2)
                        :six (/ 5 2)
                        :eight (/ 5 2)
                        (/ 3 2))]
@@ -868,7 +926,7 @@
         web-thickness (get c :configuration-web-thickness)
         step                             wall-step
         local-back-y                     (thumb-back-y c)
-        thumb-range                      (case thumb-count :five (/ 5 2) :six (/ 5 2) :eight (/ 5 2) (/ 3 2))
+        thumb-range                      (case thumb-count (:five :five-lightcycle) (/ 5 2) :six (/ 5 2) :eight (/ 5 2) (/ 3 2))
         back-thumb-position              (case thumb-count :two 0 1)
         thumb-back-to-left-wall-position (case thumb-count :two 2.35 1.6666)]
     (union
@@ -909,7 +967,7 @@
         web-thickness (get c :configuration-web-thickness)
         step             wall-step
         place            (partial thumb-place c)
-        column           (case thumb-count :five 2 :six 2 :eight 2 1)
+        column           (case thumb-count (:five :five-lightcycle) 2 :six 2 :eight 2 1)
         left-wall-length (case thumb-count :two (- 1.18 (/ thumb-alpha 1.5)) (- 2.24 thumb-alpha))]
     (union
      (apply union
@@ -964,7 +1022,7 @@
                           (translate [0  (- plate-height) 0]))
         thumb-br     (->> (cmn/web-post-br c web-thickness)
                           (translate [-0 (- plate-height) 0]))
-        thumb-range  (case thumb-count :five (/ 5 2) :six (/ 5 2) :eight (/ 5 2) (/ 3 2))]
+        thumb-range  (case thumb-count (:five :five-lightcycle) (/ 5 2) :six (/ 5 2) :eight (/ 5 2) (/ 3 2))]
     (union
      (apply union
             (for [x (range-inclusive thumb-right-wall (- (+ thumb-range 0.05) step) step)]

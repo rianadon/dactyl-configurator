@@ -18,6 +18,7 @@ message Original {
                                      (dropdown) = { value: "two", name: "2" },
                                      (dropdown) = { value: "three", name: "3" },
                                      (dropdown) = { value: "five", name: "5" },
+                                     (dropdown) = { value: "five-lightcycle", name: "5 (Lightcycle)" },
                                      (dropdown) = { value: "six", name: "6" },
                                      (dropdown) = { value: "eight", name: "8" }];
     optional bool hide_last_pinky = 6 [(name) = "Hide Bottom Pinky?", (help) = "See Kinesis Advantage's Layout"];
