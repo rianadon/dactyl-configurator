@@ -34,6 +34,7 @@
             "thumbOffsetY": 45
         },
         "misc": {
+            "keycaps": false,
             "rightSide": true,
             "plate": false,
             "screwInserts": false,

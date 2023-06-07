@@ -44,6 +44,7 @@ message Original {
   }
   message Misc {
     optional bool screw_inserts = 1 [(name) = "Screw Inserts"];
+    optional bool keycaps = 5 [(name) = "Show Keycaps"];
     optional bool right_side = 2 [(name) = "Right Side"];
     optional bool use_case = 3 [(name) = "Include case"];
     optional bool plate = 4 [(name) = "Generate Plate Instead"];

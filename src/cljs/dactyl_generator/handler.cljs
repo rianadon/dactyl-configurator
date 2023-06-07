@@ -150,6 +150,7 @@
                         :configuration-use-screw-inserts?   (get misc "screwInserts" false)
                         :configuration-is-right?            (get misc "rightSide" true)
                         :configuration-is-plate?            (get misc "plate" false)
+                        :configuration-show-caps?           (get misc "keycaps" false)
                         :configuration-use-case?            (get misc "useCase" true)}
         ]
     c))
