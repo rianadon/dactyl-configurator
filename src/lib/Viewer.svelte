@@ -23,7 +23,7 @@
  $: {
      // Give the camera an initial position
      if (camera && camera.position.length() == 0) {
-         camera.position.set(0, -1, 0.8);
+         camera.position.set(0, 0.8, 1);
          resize();
      }
  }
@@ -70,16 +70,16 @@
 {#if WebGL.isWebGLAvailable()}
   <div class="container" bind:this={canvas} style={style}>
     <SC.Canvas antialias alpha={true}>
-      {#if validGeometries[0]}
-	    <SC.Mesh geometry={validGeometries[0]} />
-      {/if}
-      {#if validGeometries[1] && showSupports}
-        <SC.Mesh geometry={validGeometries[1]} material={new THREE.MeshStandardMaterial({ color: 0xcc80f2, transparent: true, opacity: 0.85 })} />
-      {/if}
-	  <PerspectiveCamera fov={cameraFOV} bind:self={camera} bind:root={root} />
+      <SC.Group rotation={[-Math.PI/2, 0, 0]}>
+        {#if validGeometries[0]}
+	      <SC.Mesh geometry={validGeometries[0]} />
+        {/if}
+        {#if validGeometries[1] && showSupports}
+          <SC.Mesh geometry={validGeometries[1]} material={new THREE.MeshStandardMaterial({ color: 0xcc80f2, transparent: true, opacity: 0.85 })} />
+        {/if}
+      </SC.Group>
+      <PerspectiveCamera fov={cameraFOV} bind:self={camera} bind:root={root} />
       <SC.OrbitControls enableZoom={false} />
-      <SC.AmbientLight intensity={0.8} />
-      <SC.DirectionalLight intensity={0.3} position={[0, 0, -20]} />
     </SC.Canvas>
   </div>
 {:else}
