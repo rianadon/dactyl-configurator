@@ -19,6 +19,7 @@
  import Instructions from './lib/Instructions.svelte';
  import FilamentChart from './lib/FilamentChart.svelte';
  import { serialize, deserialize } from './lib/serialize';
+ import { trackPageView, trackEvent } from './lib/telemetry';
 
  import presetOrigOrig from './assets/presets/original.original.json'
  import presetLight from './assets/presets/original.lightcycle.json'
@@ -48,8 +49,11 @@
  let instructionsOpen = !(localStorage['instructions'] === 'false')
  let showSupports = false
 
+ let renderBegin: number
+
  $: localStorage['instructions'] = JSON.stringify(instructionsOpen)
 
+ trackPageView()
  exampleGeometry().then(g => {
      // Load the example gemoetry if nothing has been rendered yet
      if (!keyboardGeometry) keyboardGeometry = g
@@ -92,6 +96,7 @@
  function downloadSTL() {
      generatingSTL = true;
      stlDialogOpen = true;
+     renderBegin = window.performance.now()
      myWorker.postMessage({type: "stl", data: state });
  }
 
@@ -127,6 +132,7 @@
              // STL generation finished. Download it!
              generatingSTL = false;
              generatingSCADSTL = false;
+             trackEvent('dactyl-render', { time: window.performance.now() - renderBegin })
              const blob = new Blob([e.data.data], { type: "application/octet-stream" })
              download(blob, "model.stl")
          } else if (e.data.type == 'csg') {
