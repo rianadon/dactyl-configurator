@@ -7,6 +7,7 @@ import createGC, { type GC } from './gc'
 import scadWasmUrl from '../assets/openscad.wasm?url'
 import stlExport from './STLExporter'
 import { supportManifold } from './supports'
+import svgExport from "./SVGExporter.js"
 
 (Module as (a: any) => Promise<ManifoldStatic>)({
     locateFile: () => manifoldWasmUrl,
@@ -29,6 +30,7 @@ function main(manifold: ManifoldStatic) {
         switch (type) {
             case 'csg': return generateCSG(data, modeling, cleanup)
             case 'stl': return generateSTL(data, modeling, cleanup)
+            case 'svg': return generateSVG(data, modeling, cleanup)
             case 'scad': return generateSCAD(data)
             case 'scadstl': return generateSCAD_STL(data)
         }
@@ -55,6 +57,16 @@ function generateSTL(config: any, modeling: Modeling, cleanup: GC) {
     } catch (e) {
         console.error(e)
         message('log', 'Error generating model with Manifold. Try using the link above to generate the model with OpenSCAD.')
+    }
+}
+
+function generateSVG(config: any, modeling: Modeling, cleanup: GC) {
+    try {
+        const mesh: Mesh = Dactyl.generateManifold(config, modeling).getMesh()
+        message('svg', svgExport(mesh))
+        cleanup()
+    } catch (e) {
+        console.error(e)
     }
 }
 

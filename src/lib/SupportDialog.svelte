@@ -1,5 +1,5 @@
 <script lang="ts">
- import Dialog from './Dialog.svelte'
+ import Dialog from './presentation/Dialog.svelte'
  import Heart from 'svelte-material-icons/HeartOutline.svelte'
 
  let noGH = false

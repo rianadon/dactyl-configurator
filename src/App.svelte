@@ -18,6 +18,7 @@
  import ShapingSection from './lib/ShapingSection.svelte';
  import Instructions from './lib/Instructions.svelte';
  import FilamentChart from './lib/FilamentChart.svelte';
+ import InfoBox from './lib/presentation/Info.svelte';
  import { serialize, deserialize } from './lib/serialize';
  import { trackPageView, trackEvent } from './lib/telemetry';
 
@@ -43,6 +44,7 @@
  let generatingCSG = false;
  let generatingSCAD = false;
  let generatingSTL = false;
+ let generatingSVG = false;
  let generatingSCADSTL = false;
  let stlDialogOpen = false;
  let sponsorOpen = false;
@@ -100,6 +102,11 @@
      myWorker.postMessage({type: "stl", data: state });
  }
 
+ function downloadSVG() {
+     generatingSVG = true;
+     myWorker.postMessage({type: "svg", data: state });
+ }
+
  function downloadSCADSTL() {
      generatingSCADSTL = true;
      logs = ['Loading OpenSCAD...']
@@ -135,6 +142,11 @@
              trackEvent('dactyl-render', { time: window.performance.now() - renderBegin })
              const blob = new Blob([e.data.data], { type: "application/octet-stream" })
              download(blob, "model.stl")
+         } else if (e.data.type == 'svg') {
+             // SVG generation finished. Download it!
+             generatingSVG = false;
+             const blob = new Blob([e.data.data], { type: "image/svg+xml" })
+             download(blob, "plate.svg")
          } else if (e.data.type == 'csg') {
              // Preview finished. Show it!
              generatingCSG = false;
@@ -194,6 +206,16 @@
           {#each section.fields as key}
             <Field defl={defaults.options[section.var][key.var]} schema={key} bind:value={state.options[section.var][key.var]} />
           {/each}
+          {#if section.var == "connector" && state.options.connector.external}
+            <InfoBox>
+              <p>You'll also need to print one of the external holders listed <a class="underline text-purple-500" href="https://github.com/rianadon/dactyl-configurator/blob/main/src/connectors.md">here</a>.</p>
+            </InfoBox>
+          {:else if section.var == "misc" && state.options.misc.plate}
+            <InfoBox>
+              <p class="mb-1">If you plan to laser cut the base instead of 3D printing, you'll need a 2D drawing of the plate.  <button class="underline text-purple-500" on:click={downloadSVG}>Download an SVG file{#if generatingSVG}...{/if}</button> that you can open in Inkscape or Illustrator and send to the cutter.</p>
+              <p>Please ensure the line labeled <span class="text-purple-500 font-semibold">1 cm</span> is really 1 cm long before sending the file. Afterwards you can safely delete it.</p>
+            </InfoBox>
+          {/if}
         {/if}
       </div>
     {/each}
