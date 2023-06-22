@@ -80,6 +80,9 @@
       </SC.Group>
       <PerspectiveCamera fov={cameraFOV} bind:self={camera} bind:root={root} />
       <SC.OrbitControls enableZoom={false} />
+      <!-- Lights for the supports material -->
+      <SC.AmbientLight intensity={0.8} />
+      <SC.DirectionalLight intensity={0.3} position={[0, 0, -20]} />
     </SC.Canvas>
   </div>
 {:else}
