@@ -24,7 +24,7 @@
 
  import presetOrigOrig from './assets/presets/original.original.json'
  import presetLight from './assets/presets/original.lightcycle.json'
- import presetMax from ''./assets/presets/original.maximus.json''
+ import presetMax from './assets/presets/original.maximus.json'
  import presetDefault from './assets/presets/manuform.default.json'
  import presetOriginal from './assets/presets/manuform.tshort.json'
  import presetCorne from './assets/presets/manuform.corne.json'
