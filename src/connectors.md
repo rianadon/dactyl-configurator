@@ -19,4 +19,8 @@ If you're using one of these, make sure to set the connector type to *anything* 
 [Blue Ye (@yejianfengblue )]: https://github.com/yejianfengblue
 [ec-right]: https://web.archive.org/web/20220607031927/https://dactyl.siskam.link/loligagger-external-holder-elite-c-v1.stl
 
+If you're looking to use a wireless microcontroller like the nice!nano, you can use the USB-C Pro Micro holder. However the nice!nano will fit loosely since it has a mid-mount USB-C port whereas the Pro Micro holder is designed for a top-mount port. You'll also have no need for the TRRS jack as the two halves will be wirelessly connected.  There is an [external holder](https://github.com/nathanielks/nice-nano-holder) by [@nathanielks](https://github.com/nathanielks) meant for the nice!nano that houses a power switch and reset button, but it is 4mm taller than the other holders. This makes it incompatible with the generator's models.
+
+----
+
 If you found one that isn't listed here, please submit a pull request! I'd like to make this list as complete as possible.
