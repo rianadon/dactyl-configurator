@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   runtime-test:
-    name: Check that things compile
+    name: Verify consistency with original manuform
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
