@@ -48,8 +48,7 @@ They compiled files are placed in the `target` directory. To build the website, 
   - `assets/`: Models, JSON configuration, and WebAssembly files used by the frontend
   - `cljs/`: ClojureScript source code
     - `dactyl_generator`: Generate the Dactyl models. Most notably: `manuform.cljs`
-    - `dactyl_node`: Entry point for generating Dactyl models from a Node.js script (dev only)
-    - `dactyl_worker`: Entry point for the web worker that generates Dactyl models
+    - `dactyl_node`: Entry point for generating Dactyl models from Node.js and the browser
     - `scad_clj`: My modifications to the scad-clj library (simplifies outputting scad code)
   - `lib`: Components and methods used by the frontend
   - `proto`: Protobuf definitions
