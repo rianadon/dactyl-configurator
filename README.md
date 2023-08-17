@@ -43,7 +43,7 @@ They compiled files are placed in the `target` directory. To build the website, 
 - [The Noble Effort To Put OpenSCAD In The Browser](https://hackaday.com/2022/03/14/the-noble-effort-to-put-openscad-in-the-browser/)
 
 ## What are all these files?
-- `index.html` and `index.js`, and `public/`: Static files used for the website
+- `index.html` and `public/`: Static files used for the website
 - `scripts/`: Node.js scripts for testing and developing new features
 - `src/`: Source code
   - `assets/`: Models, JSON configuration, and WebAssembly files used by the frontend
