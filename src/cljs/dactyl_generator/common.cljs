@@ -25,11 +25,11 @@
 (defn keyswitch-height
   "the y dimension of an mx style keyswitch, in millimeter."
   [c]
-  (if (get c :configuration-ibnuda-edits?) 14.0 14.4))
+  (if (get c :configuration-ibnuda-edits?) (if (not= :choc (get c :configuration-switch-type)) 14.0 13.8) 14.4))
 (defn keyswitch-width
   "the x dimension of an mx style keyswitch, in millimeter."
   [c]
-  (if (get c :configuration-ibnuda-edits?) 14.0 14.4))
+  (if (get c :configuration-ibnuda-edits?) (if (not= :choc (get c :configuration-switch-type)) 14.0 13.8) 14.4))
 
 (defn keyswitch-width-c [c] (keyswitch-width c))
 
