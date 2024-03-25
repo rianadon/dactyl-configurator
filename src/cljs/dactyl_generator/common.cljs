@@ -25,11 +25,11 @@
 (defn keyswitch-height
   "the y dimension of an mx style keyswitch, in millimeter."
   [c]
-  (if (get c :configuration-ibnuda-edits?) 14.0 14.4))
+  (if (get c :configuration-ibnuda-edits?) (if (not= :choc (get c :configuration-switch-type)) 14.0 13.8) 14.4))
 (defn keyswitch-width
   "the x dimension of an mx style keyswitch, in millimeter."
   [c]
-  (if (get c :configuration-ibnuda-edits?) 14.0 14.4))
+  (if (get c :configuration-ibnuda-edits?) (if (not= :choc (get c :configuration-switch-type)) 14.0 13.8) 14.4))
 
 (defn keyswitch-width-c [c] (keyswitch-width c))
 
@@ -270,8 +270,8 @@
                                                      (/ (plate-thickness c) 2)]))
                               :choc (->> (cube (+ (keyswitch-width-c c) 3) holder-thickness (* (plate-thickness c) 0.65))
                                          (translate [0
-                                                     (+ holder-thickness (/ (keyswitch-height c) 2))
-                                                     (* (plate-thickness c) 0.7)]))
+                                                     (+ (/ holder-thickness 2) (/ (keyswitch-height c) 2))
+                                                     ( + (/ (plate-thickness c) 2) (/ (- (plate-thickness c) (* (plate-thickness c) 0.65)) 2))]))
                               (->> (cube (+ (keyswitch-width-c c) mx-margin) holder-thickness (plate-thickness c))
                                    (translate [0
                                                (+ (/ holder-thickness 2) (/ (keyswitch-height c) 2))
@@ -286,10 +286,10 @@
                                                             0
                                                             (- (plate-thickness c)
                                                                (/ alps-notch-height 2))])))
-                              :choc (->> (cube holder-thickness (+ (keyswitch-height c) 3.3) (* (plate-thickness c) 0.65))
+                              :choc (->> (cube holder-thickness (+ (keyswitch-height c) 3.3) 2.2) ;2.2 is the clamp-height of kailh choc V1 switches according to datasheet 
                                          (translate [(+ (/ holder-thickness 2) (/ (keyswitch-width-c c) 2))
                                                      0
-                                                     (* (plate-thickness c) 0.7)]))
+                                                     ( + (/ (plate-thickness c) 2) (/ (- (plate-thickness c) 2.2) 2))]))
                               (->> (cube holder-thickness (+ (keyswitch-height c) mx-margin) (plate-thickness c))
                                    (translate [(+ (/ holder-thickness 2) (/ (keyswitch-width-c c) 2))
                                                0
