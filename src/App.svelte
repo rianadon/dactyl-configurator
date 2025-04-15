@@ -225,7 +225,7 @@
   <div class="flex-1">
     {#if state.keyboard == "original"}
       <div class="border-2 border-yellow-400 py-2 px-4 m-2 rounded bg-white dark:bg-gray-900">
-        Generating the Original Dactyl case takes an extremeley long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
+        Generating the Original Dactyl case takes an extremely long time, so it is disabled by default. Turn on <span class="whitespace-nowrap bg-gray-200 dark:bg-gray-800 px-2 rounded">Include Case</span> to generate it.
       </div>
     {/if}
     <div class="viewer relative xs:sticky h-[100vh] top-0">
